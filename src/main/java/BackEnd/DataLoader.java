@@ -15,25 +15,25 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (wardrobeRepository.count() == 0) {
-            // Dodajemy ubiór dla Kacpra (ID: 1)
-            saveItem(1L, "Kurtka Gore-Tex", "Outerwear", 1.2, true);
-            saveItem(1L, "T-shirt Bawełniany", "Top", 0.1, false);
+            // Przykładowe dane dla Kacpra (ID: 1)
+            saveItem(1L, "T-shirt", false, false, "Bawełna", 150.0, 0.09);
+            saveItem(1L, "Bluza", false, true, "Poliester", 280.0, 0.34);
+            saveItem(1L, "Kurtka", true, true, "Gore-Tex", null, 0.70);
+            saveItem(1L, "Jeansy", false, true, "Denim", 400.0, 0.25);
 
-            // Dodajemy ubiór dla Kasi (ID: 2)
-            saveItem(2L, "Płaszcz przeciwdeszczowy", "Outerwear", 1.1, true);
-            saveItem(2L, "Bluza z kapturem", "Top", 0.6, false);
-
-            System.out.println("Baza danych została zainicjalizowana rekordami startowymi.");
+            System.out.println("Baza danych zainicjalizowana nową strukturą.");
         }
     }
 
-    private void saveItem(Long uId, String name, String type, Double clo, boolean water) {
+    private void saveItem(Long uId, String cat, boolean water, boolean wind, String mat, Double gram, Double clo) {
         WardrobeItem item = new WardrobeItem();
         item.setUserId(uId);
-        item.setName(name);
-        item.setType(type);
-        item.setClo(clo);
+        item.setCategory(cat);
         item.setWaterproof(water);
+        item.setWindproof(wind);
+        item.setMaterial(mat);
+        item.setGrammage(gram);
+        item.setEstimatedClo(clo);
         wardrobeRepository.save(item);
     }
 }

@@ -15,7 +15,7 @@ public class WardrobeController {
 
     @PostMapping
     public WardrobeItem addItem(@RequestBody WardrobeItem item) {
-        System.out.println("Otrzymano ubranie: " + item.getName() + " dla użytkownika ID: " + item.getUserId());
+        System.out.println("Otrzymano ubranie kategorii: " + item.getCategory() + " dla użytkownika ID: " + item.getUserId());
         return wardrobeRepository.save(item);
     }
 

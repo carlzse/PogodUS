@@ -1,129 +1,129 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Form, Button, Table, Card } from 'react-bootstrap';
+import { Container, Form, Button, Table, Card, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
-import "./StylesPages.css";
 
 const Wardrobe = () => {
     const [items, setItems] = useState([]);
-    const [name, setName] = useState('');
-    const [type, setType] = useState('Top');
-    const [clo, setClo] = useState(0.5);
-    const [waterproof, setWaterproof] = useState(false);
+    const [category, setCategory] = useState('T-shirt');
+    const [material, setMaterial] = useState('Bawełna');
+    const [grammage, setGrammage] = useState('');
+    const [isWaterproof, setIsWaterproof] = useState(false);
+    const [isWindproof, setIsWindproof] = useState(false);
+    const [estimatedClo, setEstimatedClo] = useState(0.09);
 
-    // Pobieramy zalogowanego użytkownika z localStorage
     const user = JSON.parse(localStorage.getItem('user'));
 
-    // Funkcja pobierająca listę ubrań z serwera
-    const fetchItems = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/api/wardrobe');
-            // Filtrujemy, aby pokazać tylko ubrania zalogowanego usera
-            const userItems = response.data.filter(item => item.userId === user.id);
-            setItems(userItems);
-        } catch (error) {
-            console.error("Błąd podczas pobierania ubrań:", error);
-        }
+    // Tabela bazowa CLO (Engineering Toolbox)
+    const cloTable = {
+        'T-shirt': 0.09,
+        'Koszula (długi rękaw)': 0.22,
+        'Bluza / Sweter': 0.30,
+        'Spodnie (lekkie)': 0.20,
+        'Jeansy': 0.25,
+        'Kurtka lekka': 0.35,
+        'Kurtka zimowa': 0.70,
+        'Bielizna termo': 0.15
     };
 
+    // Automatyczne przeliczanie CLO przy zmianie kategorii lub gramatury
     useEffect(() => {
-        if (user) fetchItems();
-    }, []);
+        let base = cloTable[category] || 0.1;
+        if (grammage > 0) {
+            // Prosta korekta: każde 100g powyżej średniej (200g) dodaje 5% izolacji
+            const adjustment = (grammage - 200) / 2000;
+            base = Math.max(0.05, base + adjustment);
+        }
+        setEstimatedClo(parseFloat(base.toFixed(2)));
+    }, [category, grammage]);
+
+    const fetchItems = async () => {
+        const res = await axios.get('http://localhost:8080/api/wardrobe');
+        setItems(res.data.filter(i => i.userId === user.id));
+    };
+
+    useEffect(() => { if (user) fetchItems(); }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const newItem = {
             userId: user.id,
-            name: name,
-            type: type,
-            clo: parseFloat(clo),
-            waterproof: waterproof
+            category,
+            material,
+            grammage: grammage || null,
+            waterproof: isWaterproof,
+            windproof: isWindproof,
+            estimatedClo
         };
-
-        try {
-            await axios.post('http://localhost:8080/api/wardrobe', newItem);
-            alert("Dodano ubiór!");
-            setName(''); // czyścimy pola
-            setWaterproof(false);
-            fetchItems(); // odświeżamy listę
-        } catch (error) {
-            alert("Błąd zapisu!");
-        }
+        await axios.post('http://localhost:8080/api/wardrobe', newItem);
+        fetchItems();
     };
-
-    if (!user) return <Container className="mt-5"><h3>Zaloguj się, aby zobaczyć szafę.</h3></Container>;
 
     return (
         <Container className="mt-4 text-white">
-            <h2 className="mb-4">Twoja Wirtualna Szafa (Użytkownik: {user.name})</h2>
-
-            <Card className="bg-dark text-white p-4 mb-5 border-warning">
-                <h4>Dodaj nowe ubranie</h4>
+            <Card className="p-4 bg-dark border-warning">
+                <h3>Dodaj nowe ubranie</h3>
                 <Form onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Nazwa ubrania</Form.Label>
-                        <Form.Control
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            placeholder="np. Żółty sztormiak"
-                            required
-                        />
-                    </Form.Group>
+                    <Row>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Kategoria</Form.Label>
+                                <Form.Select value={category} onChange={(e) => setCategory(e.target.value)}>
+                                    {Object.keys(cloTable).map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                                </Form.Select>
+                            </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Materiał</Form.Label>
+                                <Form.Control value={material} onChange={(e) => setMaterial(e.target.value)} placeholder="np. Bawełna" />
+                            </Form.Group>
+                        </Col>
+                    </Row>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Typ</Form.Label>
-                        <Form.Select value={type} onChange={(e) => setType(e.target.value)}>
-                            <option>Top</option>
-                            <option>Bottom</option>
-                            <option>Outerwear</option>
-                            <option>Accessory</option>
-                        </Form.Select>
-                    </Form.Group>
+                    <Row>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Gramatura (g/m²)</Form.Label>
+                                <Form.Control type="number" value={grammage} onChange={(e) => setGrammage(e.target.value)} />
+                            </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Wyliczone CLO</Form.Label>
+                                <Form.Control type="number" step="0.01" value={estimatedClo} readOnly className="bg-secondary text-white" />
+                            </Form.Group>
+                        </Col>
+                    </Row>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Współczynnik izolacji (CLO)</Form.Label>
-                        <Form.Control
-                            type="number"
-                            step="0.1"
-                            value={clo}
-                            onChange={(e) => setClo(e.target.value)}
-                        />
-                    </Form.Group>
+                    <div className="d-flex gap-4 mb-3">
+                        <Form.Check type="checkbox" label="Wodoodporny" checked={isWaterproof} onChange={e => setIsWaterproof(e.target.checked)} />
+                        <Form.Check type="checkbox" label="Wiatroszczelny" checked={isWindproof} onChange={e => setIsWindproof(e.target.checked)} />
+                    </div>
 
-                    {/* NOWY CHECKBOX */}
-                    <Form.Group className="mb-3">
-                        <Form.Check
-                            type="checkbox"
-                            label="Czy jest wodoodporne?"
-                            checked={waterproof}
-                            onChange={(e) => setWaterproof(e.target.checked)}
-                        />
-                    </Form.Group>
-
-                    <Button variant="warning" type="submit">Dodaj do szafy</Button>
+                    <Button variant="warning" type="submit">Zapisz w szafie</Button>
                 </Form>
             </Card>
 
-            <h4 className="mt-4">Zawartość Twojej szafy:</h4>
-            <Table striped bordered hover variant="dark">
+            <Table striped bordered hover variant="dark" className="mt-4">
                 <thead>
                 <tr>
-                    <th>Nazwa</th>
-                    <th>Typ</th>
+                    <th>Kategoria</th>
+                    <th>Materiał</th>
+                    <th>Właściwości</th>
                     <th>CLO</th>
-                    <th>Wodoodporność</th>
                 </tr>
                 </thead>
                 <tbody>
                 {items.map(item => (
                     <tr key={item.id}>
-                        <td>{item.name}</td>
-                        <td>{item.type}</td>
-                        <td>{item.clo}</td>
-                        <td>{item.waterproof ? "✅ Tak" : "❌ Nie"}</td>
+                        <td>{item.category}</td>
+                        <td>{item.material} ({item.grammage}g)</td>
+                        <td>
+                            {item.waterproof && "🌊"} {item.windproof && "💨"}
+                        </td>
+                        <td className="text-warning">{item.estimatedClo}</td>
                     </tr>
                 ))}
-                {items.length === 0 && <tr><td colSpan="4" className="text-center">Szafa jest pusta. Dodaj coś!</td></tr>}
                 </tbody>
             </Table>
         </Container>

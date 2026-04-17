@@ -5,60 +5,88 @@ import axios from 'axios';
 const ClothingSuggestion = ({ latitude, longitude }) => {
     const [recommendation, setRecommendation] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const user = JSON.parse(localStorage.getItem('user'));
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const getWeatherAndSuggest = async () => {
+            // 1. Pobieramy usera wewnątrz efektu, żeby mieć pewność, że dane są aktualne
+            const userData = JSON.parse(localStorage.getItem('user'));
+
+            // Jeśli nie ma użytkownika, nie strzelamy do API, tylko pokazujemy info o logowaniu
+            if (!userData || !userData.id) {
+                setIsLoading(false);
+                return;
+            }
+
             try {
-                // 1. Pobierz pogodę
                 const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=apparent_temperature,precipitation&timezone=auto`);
                 const weatherData = await weatherRes.json();
 
                 const temp = weatherData.current.apparent_temperature;
                 const isRaining = weatherData.current.precipitation > 0;
 
-                if (user) {
-                    // 2. Jeśli zalogowany: Pobierz z bazy H2
-                    const res = await axios.get(`http://localhost:8080/api/wardrobe/recommendation`, {
-                        params: { userId: user.id, temp: temp, rain: isRaining }
-                    });
-                    setRecommendation(res.data);
-                }
-                setIsLoading(false);
+                // 2. Strzał do API tylko z poprawnym ID
+                const res = await axios.get(`http://localhost:8080/api/wardrobe/recommendation`, {
+                    params: {
+                        userId: userData.id,
+                        temp: temp,
+                        rain: isRaining
+                    }
+                });
+
+                setRecommendation(res.data);
+                setError(null); // Czyścimy ewentualne stare błędy
             } catch (err) {
-                console.error(err);
+                console.error("Błąd rekomendacji:", err);
+                setError("Nie udało się pobrać rekomendacji.");
+            } finally {
                 setIsLoading(false);
             }
         };
 
-        getWeatherAndSuggest();
-    }, [latitude, longitude]);
+        if (latitude && longitude) {
+            getWeatherAndSuggest();
+        }
+    }, [latitude, longitude]); // Reaguj na zmianę lokalizacji
 
+    // Logika renderowania
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    if (!user) return <Alert variant="info">Zaloguj się, aby zobaczyć sugestie.</Alert>;
     if (isLoading) return <Spinner animation="border" variant="warning" />;
+    if (error) return <Alert variant="danger" className="mt-2">{error}</Alert>;
 
     return (
-        <Card className="bg-dark text-white border-warning">
+        <Card className="bg-dark text-white border-warning h-100">
             <Card.Body>
-                <Card.Title>Rekomendacja ubioru</Card.Title>
+                <Card.Title className="text-warning">Twoja idealna warstwa</Card.Title>
                 <hr className="bg-warning" />
-                {user ? (
-                    recommendation.length > 0 ? (
-                        <ListGroup variant="flush">
-                            {recommendation.map(item => (
-                                <ListGroup.Item key={item.id} className="bg-dark text-white d-flex justify-content-between">
-                                    <span>{item.name} ({item.type})</span>
-                                    <span className="text-warning">{item.clo} CLO</span>
-                                </ListGroup.Item>
-                            ))}
-                            <div className="mt-3 text-end fw-bold">
-                                Sumaryczne CLO: {recommendation.reduce((acc, curr) => acc + curr.clo, 0).toFixed(2)}
-                            </div>
-                        </ListGroup>
-                    ) : (
-                        <p>Brak ubrań w szafie pasujących do pogody.</p>
-                    )
+
+                {recommendation.length > 0 ? (
+                    <ListGroup variant="flush">
+                        {recommendation.map(item => (
+                            <ListGroup.Item key={item.id} className="bg-dark text-white d-flex justify-content-between align-items-center border-secondary">
+                                <div>
+                                    <div className="fw-bold">{item.category}</div>
+                                    <small className="text-muted">{item.material} {item.grammage ? `(${item.grammage}g/m²)` : ''}</small>
+                                </div>
+                                <div className="text-end">
+                                    <span className="badge bg-warning text-dark">{item.estimatedClo} CLO</span>
+                                    <div style={{fontSize: '0.8rem'}}>
+                                        {item.waterproof && " 🌊"} {item.windproof && " 💨"}
+                                    </div>
+                                </div>
+                            </ListGroup.Item>
+                        ))}
+                        <div className="mt-3 p-2 bg-secondary rounded text-center fw-bold">
+                            Suma izolacji: {recommendation.reduce((acc, curr) => acc + curr.estimatedClo, 0).toFixed(2)} CLO
+                        </div>
+                    </ListGroup>
                 ) : (
-                    <Alert variant="info">Zaloguj się, aby otrzymać rekomendację na podstawie Twojej szafy.</Alert>
+                    <div className="text-center py-4">
+                        <p>Brak ubrań w szafie pasujących do obecnej pogody.</p>
+                        <small className="text-muted">Dodaj więcej kategorii ubrań w zakładce Szafa.</small>
+                    </div>
                 )}
             </Card.Body>
         </Card>

@@ -230,7 +230,6 @@ body {
 /* Zmodyfikowane style dla aplikacji pogodowej */
 body {
     font-family: 'Roboto', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     transition: background 0.5s ease;
 }
@@ -304,4 +303,29 @@ body {
     .temperature {
         font-size: 3rem;
     }
+}
+/* Navigation Styles */
+.navbar {
+    background-color: #2c3e50; /* Ciemny, głęboki granat, zbliżony do kolorów w gradiencie, ale stały */
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.4); /* Zwiększony cień dla lepszej separacji od tła */
+    border-bottom: 3px solid rgba(255, 255, 255, 0.2); /* Delikatna biała ramka dla elegancji */
+}
+
+.navbar-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #f8c630 !important; /* Złoty kolor dla tytułu pozostaje */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6); /* Mocniejszy cień dla lepszej czytelności na ciemnym tle */
+}
+
+.navbar-link {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9) !important; /* Biały kolor linków z lekką przezroczystością dla czytelności */
+    margin: 0 15px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.navbar-link:hover {
+    color: #f8c630 !important; /* Złoty kolor przy najechaniu myszką */
+    transform: translateY(-2px);
 }

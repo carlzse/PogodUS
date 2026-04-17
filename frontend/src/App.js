@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Forecast from './pages/Forecast';
 import Favorites from './pages/Favorites';
 import Tutorial from './components/Tutorial';
+import Wardrobe from './pages/Wardrobe';
 
 function App() {
     const [showTutorial, setShowTutorial] = useState(false);
@@ -30,6 +31,7 @@ function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/forecast" element={<Forecast />} />
                         <Route path="/favorites" element={<Favorites />} />
+                        <Route path="/wardrobe" element={<Wardrobe />} />
                     </Routes>
                 </div>
             </BrowserRouter>

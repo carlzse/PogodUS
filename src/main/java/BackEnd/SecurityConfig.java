@@ -8,8 +8,10 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -28,15 +30,24 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.formLogin(Customizer.withDefaults())
+        return http
+                // 1. POZWÓL NA RAMKI (Kluczowe dla H2)
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+
                 .authorizeHttpRequests(httpRequests -> httpRequests
+                        // 2. JAWNE DOPUSZCZENIE H2
+                        .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().permitAll()
                 )
-                .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                // 3. ZMIANA NA IF_REQUIRED (H2 potrzebuje sesji)
+                .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+
                 .authenticationProvider(authenticationProvider)
                 .build();
     }
@@ -45,7 +56,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         var configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
 

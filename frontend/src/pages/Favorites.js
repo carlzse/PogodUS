@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Button, Form, ListGroup, Alert } from 'react-bootstrap';
 import { Link } from "react-router-dom";
-import "./Styles.css";
+import "./StylesPages.css";
 
 const Favorites = () => {
     const [favorites, setFavorites] = useState([
-        { id: 1, name: "New York", temp: 72, condition: "Sunny" },
-        { id: 2, name: "London", temp: 65, condition: "Cloudy" },
-        { id: 3, name: "Tokyo", temp: 80, condition: "Partly Cloudy" }
+        { id: 1, name: "Warszawa", temp: 12, condition: "Słonecznie" },
+        { id: 2, name: "Londyn", temp: 15, condition: "Pochmurno" },
+        { id: 3, name: "Tokio", temp: 8, condition: "Częściowo Zachmurzone" }
     ]);
     const [newLocation, setNewLocation] = useState("");
     const [showAlert, setShowAlert] = useState(false);
@@ -70,7 +70,7 @@ const Favorites = () => {
 
     return (
         <Container className="py-5">
-            <h1 className="text-center mb-4">Your Favorite Locations</h1>
+            <h1 className="text-center mb-4">Ulubione miejsca</h1>
             <div className="golden-line mb-4"></div>
 
             {showAlert && (
@@ -83,7 +83,7 @@ const Favorites = () => {
                 <Col md={6}>
                     <Card>
                         <Card.Body>
-                            <Card.Title>Add New Location</Card.Title>
+                            <Card.Title>Wyszukaj miasto</Card.Title>
                             <Form onSubmit={handleAddFavorite}>
                                 <Form.Group className="mb-3">
                                     <Form.Control
@@ -99,7 +99,7 @@ const Favorites = () => {
                                     type="submit"
                                     disabled={!newLocation.trim()}
                                 >
-                                    Add to Favorites
+                                    Dodaj do ulubionych
                                 </Button>
                             </Form>
                         </Card.Body>
@@ -120,12 +120,12 @@ const Favorites = () => {
                                             size="sm"
                                             onClick={() => handleRemoveFavorite(location.id)}
                                         >
-                                            Remove
+                                            Usuń
                                         </Button>
                                     </div>
                                     <div className="weather-summary my-3">
                                         <span className="weather-icon">{getWeatherIcon(location.condition)}</span>
-                                        <span className="current-temp">{location.temp}°F</span>
+                                        <span className="current-temp">{location.temp}°C</span>
                                         <span className="current-condition">{location.condition}</span>
                                     </div>
                                     <Button
@@ -134,7 +134,7 @@ const Favorites = () => {
                                         variant="outline-primary"
                                         className="w-100"
                                     >
-                                        View Detailed Forecast
+                                        Szczegóły
                                     </Button>
                                 </Card.Body>
                             </Card>
@@ -150,24 +150,7 @@ const Favorites = () => {
                 )}
             </Row>
 
-            <Row className="mt-4">
-                <Col>
-                    <Card className="info-card">
-                        <Card.Body>
-                            <h3>Benefits of Saved Locations</h3>
-                            <ul>
-                                <li>Quickly access weather for places you care about</li>
-                                <li>Compare conditions across different cities</li>
-                                <li>Track weather patterns in multiple locations</li>
-                                <li>Easily plan trips and travel</li>
-                            </ul>
-                            <p className="mb-0">
-                                In the future, this feature will support location-based weather alerts and notifications.
-                            </p>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
+
         </Container>
     );
 };

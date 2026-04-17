@@ -25,7 +25,7 @@ public class WardrobeController {
     }
 
     @Autowired
-    private BackEnd.RecommendationService recommendationService;
+    private BackEnd.Service.RecommendationService recommendationService;
 
     @GetMapping("/recommendation")
     public List<WardrobeItem> getRecommendation(

@@ -1,5 +1,7 @@
-package BackEnd;
+package BackEnd.Service;
 
+import BackEnd.WardrobeItem;
+import BackEnd.WardrobeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;

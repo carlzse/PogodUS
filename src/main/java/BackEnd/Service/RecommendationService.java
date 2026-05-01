@@ -32,7 +32,7 @@ public class RecommendationService {
      * opadów i prędkości wiatru.
      */
     public double calculateTargetClo(double tempApparent, boolean isRaining, double windSpeed) {
-        double targetClo = (24.0 - tempApparent) / 7.0;
+        double targetClo = (22.0 - tempApparent) / 7.0;
         if (targetClo < 0.2) targetClo = 0.2;
         if (isRaining) targetClo += 0.2;
         if (windSpeed > 20.0) targetClo += 0.1;
@@ -52,18 +52,31 @@ public class RecommendationService {
 
         if (allItems.isEmpty()) return Collections.emptyList();
 
-        return findOptimalSet(allItems, targetClo, isRaining, windSpeed > 20.0);
+        return findOptimalSet(allItems, targetClo, isRaining, windSpeed > 20.0, tempApparent);
     }
 
     /**
      * Przeszukuje wszystkie kombinacje warstw i wybiera tę z sumą CLO najbliższą targetClo,
-     * uwzględniając wymagania wodoodporności i wiatroszczelności.
+     * uwzględniając wymagania wodoodporności, wiatroszczelności oraz
+     * odrzucając ubrania zbyt grube na daną temperaturę.
      */
     private List<WardrobeItem> findOptimalSet(List<WardrobeItem> allItems, double targetClo,
-                                              boolean isRaining, boolean isWindy) {
-        List<WardrobeItem> baseOptions   = filterByCategories(allItems, BASE_TOP);
-        List<WardrobeItem> midOptions    = filterByCategories(allItems, MID_LAYER);
-        List<WardrobeItem> outerOptions  = filterByCategories(allItems, OUTER);
+                                              boolean isRaining, boolean isWindy, double tempApparent) {
+        // Maksymalne dopuszczalne CLO dla pojedynczego elementu w zależności od temperatury
+        double maxAllowedClo;
+        if (tempApparent > 15) maxAllowedClo = 0.45;
+        else if (tempApparent > 10) maxAllowedClo = 0.65;
+        else if (tempApparent > 5) maxAllowedClo = 0.85;
+        else maxAllowedClo = 1.2;
+
+        // Filtrujemy przedmioty, które są zbyt ciężkie
+        List<WardrobeItem> baseOptions = filterByCategories(allItems, BASE_TOP);
+        List<WardrobeItem> midOptions = filterByCategories(allItems, MID_LAYER).stream()
+                .filter(i -> i.getEstimatedClo() <= maxAllowedClo)
+                .collect(Collectors.toList());
+        List<WardrobeItem> outerOptions = filterByCategories(allItems, OUTER).stream()
+                .filter(i -> i.getEstimatedClo() <= maxAllowedClo)
+                .collect(Collectors.toList());
         List<WardrobeItem> bottomOptions = filterByCategories(allItems, BOTTOM);
 
         if (baseOptions.isEmpty() || bottomOptions.isEmpty()) {
@@ -73,6 +86,7 @@ public class RecommendationService {
         List<WardrobeItem> bestSet = null;
         double bestDiff = Double.MAX_VALUE;
         int bestLayers = 0;
+        double bestMaxItemClo = Double.MAX_VALUE; // dodatkowe kryterium
 
         for (WardrobeItem base : baseOptions) {
             for (WardrobeItem bottom : bottomOptions) {
@@ -89,10 +103,30 @@ public class RecommendationService {
                         int layers = 2 + (mid != null ? 1 : 0) + (outer != null ? 1 : 0);
                         double diff = Math.abs(totalClo - targetClo);
 
-                        if (diff < bestDiff - 0.01 ||
-                                (Math.abs(diff - bestDiff) < 0.01 && layers < bestLayers)) {
+                        // Najwyższe CLO w zestawie (im niższe tym lepiej)
+                        double maxItemClo = Math.max(base.getEstimatedClo(), bottom.getEstimatedClo());
+                        if (mid != null) maxItemClo = Math.max(maxItemClo, mid.getEstimatedClo());
+                        if (outer != null) maxItemClo = Math.max(maxItemClo, outer.getEstimatedClo());
+
+                        // Kryteria wyboru (w kolejności ważności):
+                        // 1. jak najmniejsza różnica do targetClo
+                        // 2. jak najmniejsza liczba warstw
+                        // 3. jak najniższe maksymalne CLO pojedynczego elementu
+                        boolean better = false;
+                        if (diff < bestDiff - 0.01) {
+                            better = true;
+                        } else if (Math.abs(diff - bestDiff) < 0.01) {
+                            if (layers < bestLayers) {
+                                better = true;
+                            } else if (layers == bestLayers && maxItemClo < bestMaxItemClo) {
+                                better = true;
+                            }
+                        }
+
+                        if (better) {
                             bestDiff = diff;
                             bestLayers = layers;
+                            bestMaxItemClo = maxItemClo;
                             bestSet = new ArrayList<>();
                             bestSet.add(base);
                             bestSet.add(bottom);

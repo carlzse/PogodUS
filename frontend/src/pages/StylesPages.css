@@ -1,1461 +1,223 @@
-/* General Styles */
+/* Tło całej strony z gradientem z obrazka */
 body {
-    font-family: 'SF Pro Display', 'Roboto', sans-serif; /* Preferowana czcionka, jeśli dostępna */
-    margin: 0;
-    padding: 0;
-    color: #fff; /* Domyślny kolor tekstu na biały */
-    overflow-x: hidden; /* Zapobieganie poziomemu scrollowaniu */
-}
-
-.weather-content-wrapper.clear-sky {
-    background: linear-gradient(to top, #7ed6df, #0a3d62); /* Jasny błękit do ciemniejszego błękitu */
-}
-
-.weather-content-wrapper.clouds {
-    background: linear-gradient(to top, #bdc3c7, #2c3e50); /* Jasna szarość do ciemnej szarości/błękitu */
-}
-
-.weather-content-wrapper.rain {
-    background: linear-gradient(to top, #536b79, #34495e); /* Ciemna szarość/niebieski do ciemniejszego */
-}
-
-.weather-content-wrapper.snow {
-    background: linear-gradient(to top, #b2e0f2, #7f8c8d); /* Jasny niebieski/szary do szarego */
-}
-
-/* Domyślne tło, jeśli nie ma dopasowania */
-.weather-content-wrapper {
+    background: linear-gradient(180deg, #3a4b63 0%, #2c394b 100%);
+    background-attachment: fixed;
+    color: #ffffff;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-
-    transition: background 1s ease-in-out; /* Płynna zmiana tła */
 }
 
-.highlight-text {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.8);
-    font-weight: 300;
+/* Styl "Glassmorphism" dla wszystkich kart */
+.glass-card {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
 }
 
-.navbar {
-    background-color: rgba(0, 0, 0, 0.4); /* Lekko przezroczysty navbar */
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
-}
-
-.navbar-title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #f8c630 !important;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.navbar-link {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.9) !important;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-.navbar-link:hover {
-    color: #f8c630 !important;
-}
-
-.greeting-title {
-    font-size: 2.8rem;
-    font-weight: 700;
-    color: #ffffff;
+/* Tytuły sekcji */
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
     margin-bottom: 20px;
-    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
-    line-height: 1.2;
-}
-
-.weather-card {
-    border-radius: 30px; /* Bardziej zaokrąglone rogi */
-    background: rgba(255, 255, 255, 0.15); /* Większa przezroczystość */
-    box-shadow: 0 10px 40px 0 rgba(31, 38, 135, 0.4); /* Wyraźniejszy cień */
-    backdrop-filter: blur(20px); /* Większe rozmycie */
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2); /* Wyraźniejsza ramka */
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
     color: #ffffff;
-    padding: 40px 30px; /* Większy padding wewnętrzny */
-    width: 100%;
-    max-width: 450px; /* Ograniczenie szerokości karty */
-    margin-top: 30px; /* Odstęp od nagłówka */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
 }
 
-.weather-card:hover {
-    transform: translateY(-12px) scale(1.03); /* Bardziej dynamiczna animacja */
-    box-shadow: 0 15px 50px 0 rgba(31, 38, 135, 0.5);
+/* Żółty przycisk i akcenty */
+.btn-yellow {
+    background-color: #f8c630 !important;
+    border: none !important;
+    color: #1e2732 !important;
+    font-weight: 600 !important;
+    border-radius: 12px !important;
+    padding: 8px 20px !important;
 }
 
-.location-title {
-    font-size: 2.5rem; /* Większy rozmiar nazwy lokalizacji */
-    font-weight: 600;
-    margin-bottom: 10px;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+.text-yellow {
+    color: #f8c630 !important;
 }
 
-.weather-icon-large {
-    font-size: 8rem; /* Jeszcze większa ikona */
-    margin: 20px 0 10px;
-    color: #ffffff;
-    animation: fadeInScale 1.2s ease-out;
+/* Linia ozdobna pod tytułami */
+.golden-line {
+    height: 3px;
+    background: #f8c630;
+    width: 60px;
+    margin: 10px auto 20px;
+    border-radius: 2px;
 }
 
-.temperature {
-    font-size: 5.5rem; /* Znacznie większa temperatura */
-    font-weight: 200; /* Lżejsza waga czcionki */
-    margin: 0; /* Usunięcie marginesów, aby był bliżej ikony */
-    color: #ffffff;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+/* Pasek wyszukiwania */
+.search-bar {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 50px !important;
+    color: white !important;
+    padding-left: 20px;
 }
 
-.condition {
-    font-size: 1.8rem; /* Większy tekst warunków */
-    color: rgba(255, 255, 255, 0.9);
-    margin-top: 5px; /* Mniejszy odstęp od temperatury */
-    margin-bottom: 25px;
-    font-weight: 400;
+.search-bar::placeholder {
+    color: rgba(255, 255, 255, 0.5);
 }
 
-.weather-details {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-    margin: 25px 0;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 1.3rem;
-    font-weight: 500;
+/* Lista ubrań w rekomendacji */
+.suggestion-list-item {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    padding: 15px 0 !important;
 }
 
-.weather-details span {
-    display: flex;
-    align-items: center;
-    gap: 8px; /* Odstęp między ikoną a tekstem */
+.suggestion-list-item:last-child {
+    border-bottom: none !important;
+}
+/* Tło strony - głęboki granat z Twojego wzoru[cite: 20] */
+body {
+    background: linear-gradient(180deg, #2c394b 0%, #1e2732 100%) !important;
+    background-attachment: fixed;
+    color: white;
 }
 
-.weather-details .bi {
-    font-size: 1.6rem;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.forecast-btn {
-    background-color: rgba(255, 255, 255, 0.2); /* Bardziej przezroczysty */
-    border-color: rgba(255, 255, 255, 0.3);
-    color: #ffffff;
-    border-radius: 35px; /* Bardziej zaokrąglony */
-    padding: 12px 30px; /* Większy padding */
-    font-size: 1.3rem;
-    font-weight: 600;
-    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    margin-top: 30px; /* Odstęp od szczegółów */
-}
-
-.forecast-btn:hover {
-    background-color: rgba(255, 255, 255, 0.35);
-    border-color: rgba(255, 255, 255, 0.5);
-    color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-}
-
-/* Formularz wyszukiwania */
-.form-control {
-    border-radius: 20px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #fff;
-    padding: 10px 15px;
-    font-size: 1.1rem;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.form-control::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.form-control:focus {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.6);
-    box-shadow: none;
-    color: #fff;
-}
-
-.btn-primary {
-    border-radius: 20px;
-    background-color: #f8c630;
-    border-color: #f8c630;
-    color: #333;
-    font-weight: 600;
-    padding: 10px 25px;
-    font-size: 1.1rem;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.btn-primary:hover {
-    background-color: #e0b42f;
-    border-color: #e0b42f;
-    color: #333;
-}
-
-/* Alert styles */
-.alert-danger {
-    background-color: rgba(220, 53, 69, 0.8);
-    border-color: rgba(220, 53, 69, 0.9);
-    color: #fff;
-    border-radius: 10px;
-    padding: 15px;
-    font-size: 1.1rem;
-}
-
-
-/* ClothingSuggestion card - dostosowanie do nowego wyglądu */
-.clothing-suggestion-card {
-    border-radius: 25px;
-    background: rgba(255, 255, 255, 0.1); /* Lżejsza przezroczystość */
-    box-shadow: 0 5px 20px 0 rgba(31, 38, 135, 0.2);
+/* Uniwersalny styl szklanego kafelka */
+.glass-card {
+    background: rgba(255, 255, 255, 0.05) !important;
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #ffffff;
-    width: 100%;
-    max-width: 726px;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 32px !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    color: white !important;
 }
 
-.clothing-suggestion-card h4 {
-    color: #f8c630; /* Złoty kolor dla nagłówka */
-    font-weight: 600;
-    margin-bottom: 15px;
-}
-
-.clothing-suggestion-card p {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 1.1rem;
-    line-height: 1.6;
-}
-
-
-/* Responsive adjustments */
-@media (max-width: 992px) {
-    .greeting-title {
-        font-size: 1.5rem;
-    }
-    .location-title {
-        font-size: 2.2rem;
-    }
-    .weather-icon-large {
-        font-size: 7rem;
-    }
-    .temperature {
-        font-size: 4.8rem;
-    }
-    .condition {
-        font-size: 1.6rem;
-    }
-    .weather-details {
-        font-size: 1.2rem;
-    }
-    .forecast-btn {
-        font-size: 1.2rem;
-        padding: 10px 25px;
-    }
-}
-
-@media (max-width: 768px) {
-    .greeting-title {
-        font-size: 2rem;
-    }
-    .location-title {
-        font-size: 2rem;
-    }
-    .weather-icon-large {
-        font-size: 6rem;
-    }
-    .temperature {
-        font-size: 4rem;
-    }
-    .condition {
-        font-size: 1.4rem;
-    }
-    .weather-details {
-        flex-direction: column;
-        gap: 10px;
-        font-size: 1.1rem;
-    }
-    .weather-details span {
-        justify-content: center;
-    }
-    .weather-card {
-        padding: 30px 20px;
-    }
-    .forecast-btn {
-        font-size: 1.1rem;
-        padding: 8px 20px;
-    }
-    .golden-line {
-        width: 60px;
-    }
-}
-
-@media (max-width: 576px) {
-    .greeting-title {
-        font-size: 1.8rem;
-        margin-bottom: 15px;
-    }
-    .location-title {
-        font-size: 1.8rem;
-    }
-    .weather-icon-large {
-        font-size: 5rem;
-        margin: 15px 0 5px;
-    }
-    .temperature {
-        font-size: 3.5rem;
-    }
-    .condition {
-        font-size: 1.2rem;
-        margin-bottom: 20px;
-    }
-    .weather-details {
-        font-size: 1rem;
-        margin: 15px 0;
-    }
-    .weather-card {
-        border-radius: 20px;
-    }
-    .forecast-btn {
-        font-size: 1rem;
-        padding: 6px 15px;
-    }
-    .form-control, .btn-primary {
-        font-size: 1rem;
-        padding: 8px 12px;
-    }
-}
-
-
-/* Animations */
-@keyframes fadeInScale {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* Accessibility Styles (pozostały bez zmian, ale ważne, aby były na końcu dla nadpisywania) */
-/* High Contrast Mode */
-.high-contrast {
-    background-color: #000 !important;
-    color: #fff !important;
-}
-
-.high-contrast .navbar,
-.high-contrast .card,
-.high-contrast .weather-card,
-.high-contrast .favorite-card,
-.high-contrast .forecast-card,
-.high-contrast .info-card {
-    background-color: #000 !important;
-    color: #fff !important;
-    border: 2px solid #fff !important;
-}
-
-.high-contrast .navbar-title {
-    color: #ffdd00 !important;
-}
-
-.high-contrast .navbar-link,
-.high-contrast .nav-link,
-.high-contrast .dropdown-item {
-    color: #fff !important;
-}
-
-.high-contrast .dropdown-menu {
-    background-color: #000 !important;
-    border: 1px solid #fff !important;
-}
-
-.high-contrast .temperature {
-    color: #ffdd00 !important;
-}
-
-.high-contrast .condition,
-.high-contrast .current-condition,
-.high-contrast .precipitation {
-    color: #fff !important;
-}
-
-.high-contrast .high-temp {
-    color: #ff6060 !important;
-}
-
-.high-contrast .low-temp {
-    color: #60a0ff !important;
-}
-
-.high-contrast .btn-primary {
-    background-color: #0055aa !important;
-    border-color: #fff !important;
-    color: #fff !important;
-}
-
-.high-contrast .golden-line {
-    background-color: #ffdd00 !important;
-}
-
-/* Font Size Adjustments */
-.font-small {
-    font-size: 0.85rem !important;
-}
-
-.font-normal {
-    font-size: 1rem !important;
-}
-
-.font-large {
-    font-size: 1.2rem !important;
-}
-
-.font-large .navbar-title {
-    font-size: 1.8rem !important;
-}
-
-.font-large .navbar-link {
-    font-size: 1.3rem !important;
-}
-
-.font-large .temperature {
-    font-size: 3.5rem !important;
-}
-
-.font-large .weather-icon,
-.font-large .weather-icon-large {
-    font-size: 5.5rem !important;
-}
-
-.font-large .greeting-title {
-    font-size: 2.5rem !important;
-}
-
-.font-large h1 {
-    font-size: 2.5rem !important;
-}
-
-.font-large h2 {
-    font-size: 2.2rem !important;
-}
-
-.font-large h3 {
-    font-size: 1.8rem !important;
-}
-
-.font-large p,
-.font-large .condition,
-.font-large .current-condition,
-.font-large .precipitation {
-    font-size: 1.3rem !important;
-}
-
-/* Accessibility Icons */
-.navbar .bi {
-    margin-right: 5px;
-}
-
-/* Focus Indicators */
-.high-contrast a:focus,
-.high-contrast button:focus,
-.high-contrast input:focus {
-    outline: 3px solid #ffdd00 !important;
-    outline-offset: 2px !important;
-}
-
-/* Active dropdown items */
-.dropdown-item.active,
-.dropdown-item:active {
-    background-color: #4285f4;
-}
-/* ... (pozostały kod CSS bez zmian) ... */
-
-/* Nowe style dla karty prognozy godzinowej */
-.hourly-forecast-card {
-    border-radius: 30px;
-    background: rgba(255, 255, 255, 0.15); /* Taki sam glassmorphism jak główna karta */
-    box-shadow: 0 10px 40px 0 rgba(31, 38, 135, 0.4);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    padding: 30px; /* Nieco mniejszy padding niż główna karta */
-    margin-left: 20px; /* Odstęp od głównej karty na desktopie */
-}
-
-/* Responsywność dla karty godzinowej */
-@media (max-width: 767.98px) { /* breakpoint md */
-    .hourly-forecast-card {
-        margin-left: 0; /* Brak marginesu na małych ekranach */
-        margin-top: 20px; /* Odstęp od głównej karty, gdy są jedna pod drugą */
-    }
-}
-
-
-.hourly-forecast-title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: #ffffff;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-    margin-bottom: 25px;
-    text-align: center; /* Wyśrodkowanie tytułu */
-}
-
-.hourly-items-container {
-    display: flex;
-    flex-wrap: wrap; /* Pozwala elementom zawijać się na następną linię */
-    justify-content: center; /* Centruj elementy w poziomie */
-    gap: 15px; /* Odstęp między elementami */
-}
-
-.hourly-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px 15px;
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.1); /* Lżejsze tło dla poszczególnych godzin */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    min-width: 80px; /* Minimalna szerokość dla każdego elementu */
-    transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.hourly-item:hover {
-    transform: translateY(-5px);
-    background-color: rgba(255, 255, 255, 0.15);
-}
-
-.hourly-time {
-    font-size: 1rem;
-    font-weight: 500;
-    margin-bottom: 5px;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.hourly-icon .wi, .hourly-icon .bi { /* Style dla ikon w prognozie godzinowej */
-    font-size: 2.2rem; /* Mniejsze ikony niż główna prognoza */
-    color: #ffffff;
-    margin-bottom: 5px;
-}
-
-.hourly-temperature {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #ffffff;
-    margin-top: 5px;
-}
-
-/* ... (istniejące style) ... */
-
-.hourly-forecast-card {
-    border-radius: 30px;
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 10px 40px 0 rgba(31, 38, 135, 0.4);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    padding: 30px;
-    margin-left: 20px; /* Odstęp od głównej karty na desktopie */
-}
-
-/* Responsywność dla karty godzinowej */
-@media (max-width: 767.98px) { /* breakpoint md */
-    .hourly-forecast-card {
-        margin-left: 0; /* Brak marginesu na małych ekranach */
-        margin-top: 20px; /* Odstęp od głównej karty, gdy są jedna pod drugą */
-    }
-}
-
-
-.hourly-forecast-title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: #ffffff;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-    margin-bottom: 25px;
-    text-align: center;
-}
-
-.hourly-items-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px; /* Zmniejszono odstęp, aby dać więcej miejsca */
-    padding: 0 5px; /* Dodano mały padding, aby elementy nie przylegały do krawędzi */
-}
-
-.hourly-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 8px 12px; /* Zmniejszono padding */
-    border-radius: 15px;
+/* Pasek wyszukiwania - teraz widoczny z tłem */
+.search-container {
     background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    min-width: 75px; /* Nieco zmniejszono minimalną szerokość */
-    transition: transform 0.2s ease, background-color 0.2s ease;
-    box-sizing: border-box; /* Upewnij się, że padding jest wliczony w szerokość */
+    border-radius: 50px;
+    padding: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    max-width: 600px;
+    margin: 0 auto 30px;
 }
 
-.hourly-item:hover {
-    transform: translateY(-5px);
-    background-color: rgba(255, 255, 255, 0.15);
+.search-input {
+    background: transparent !important;
+    border: none !important;
+    color: white !important;
+    padding-left: 20px !important;
 }
 
-.hourly-time {
-    font-size: 0.9rem; /* Nieco mniejsza czcionka */
-    font-weight: 500;
-    margin-bottom: 3px; /* Mniejszy margines */
-    color: rgba(255, 255, 255, 0.9);
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
 }
 
-.hourly-icon .wi, .hourly-icon .bi {
-    font-size: 2rem; /* Nieco mniejsze ikony */
-    color: #ffffff;
-    margin-bottom: 3px; /* Mniejszy margines */
+/* Style dla prognozy godzinowej (naprawa widoczności tekstu) */
+.hourly-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: white;
 }
 
-.hourly-temperature {
-    font-size: 1.2rem; /* Nieco mniejsza czcionka */
-    font-weight: 600;
-    color: #ffffff;
-    margin-top: 3px;
+.hourly-row:last-child {
+    border-bottom: none;
 }
-/* General Styles */
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f5f5f5;
-    color: #333;
+
+.text-yellow {
+    color: #f8c630 !important;
 }
 
 .golden-line {
-    height: 2px;
-    background-color: #f8c630;
-    width: 100px;
-    margin: 15px auto;
-}
-
-.highlight-text {
-    font-size: 1.2rem;
-    color: #666;
-}
-
-
-
-.navbar-title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #f8c630 !important;
-}
-
-.navbar-link {
-    font-size: 1.1rem;
-}
-
-/* Home Page Styles */
-.weather-content-wrapper {
-    min-height: calc(100vh - 56px); /* Dostosuj do wysokości navbara */
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Wyśrodkuj zawartość pionowo */
-    padding-top: 30px; /* Dodatkowy padding na górze */
-    padding-bottom: 20px; /* Dodatkowy padding na dole */
-}
-
-.weather-header {
-    margin-bottom: 30px;
-}
-
-.greeting-title {
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-.weather-card, .hourly-forecast-card, .clothing-suggestion-card {
-    border-radius: 30px;
-    background: rgba(155, 155, 220, 0.15); /* Półprzezroczyste tło */
-    box-shadow: 0 10px 40px 0 rgba(31, 38, 135, 0.4);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    padding: 30px;
-    display: flex; /* Zapewnij, że Card.Body rozciągnie się */
-    flex-direction: column; /* Aby Card.Body rozciągnęło się */
-}
-
-.weather-card .card-body,
-.hourly-forecast-card .card-body,
-.clothing-suggestion-card .card-body {
-    flex-grow: 1; /* Pozwól Card.Body wypełnić przestrzeń */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Rozłóż zawartość w pionie */
-    width: 100%;
-}
-
-.location-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: #ffffff;
-    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
-}
-
-.weather-icon-large {
-    font-size: 6rem;
-    line-height: 1;
-    margin: 20px 0;
-    color: #ffffff;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
-}
-
-.temperature {
-    font-size: 4rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: #ffffff;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
-}
-
-.condition {
-    font-size: 1.5rem;
-    font-weight: 500;
-    margin-bottom: 20px;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.weather-details {
-    display: flex;
-    justify-content: space-around;
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.8);
-    margin-top: 15px;
-    flex-wrap: wrap; /* Pozwól elementom zawijać się na mniejszych ekranach */
-}
-
-.weather-details span {
-    margin: 5px 10px;
-    display: flex;
-    align-items: center;
-}
-
-.weather-details span i {
-    margin-right: 5px;
-}
-
-.forecast-btn {
-    background-color: #f8c630;
-    border-color: #f8c630;
-    color: #333 !important;
-    font-weight: 600;
-    padding: 10px 25px;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-    text-decoration: none;
-}
-
-.forecast-btn:hover {
-    background-color: #e0b42a;
-    border-color: #e0b42a;
-    transform: translateY(-2px);
-}
-
-/* Hourly Forecast Styles */
-.hourly-forecast-card {
-    margin-left: 20px; /* Odstęp od głównej karty na desktopie */
-    padding: 20px; /* Zmniejszony padding */
-    /* KLUCZOWA ZMIANA: Określamy maksymalną wysokość i włączamy przewijanie */
-    max-height: 300px; /* PRZYKŁADOWA WYSOKOŚĆ - DO DOPASOWANIA */
-    overflow-y: auto; /* Włącz przewijanie, jeśli zawartość przekracza wysokość */
-    scrollbar-width: thin; /* Dla Firefox */
-    scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1); /* Dla Firefox */
-}
-
-/* Styl dla paska przewijania (Webkit - Chrome, Safari) */
-.hourly-forecast-card::-webkit-scrollbar {
-    width: 8px;
-}
-.hourly-forecast-card::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-}
-.hourly-forecast-card::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-}
-
-
-/* Responsywność dla karty godzinowej */
-@media (max-width: 767.98px) { /* breakpoint md */
-    .hourly-forecast-card {
-        margin-left: 0;
-        margin-top: 20px;
-    }
-}
-
-.hourly-forecast-title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: #ffffff;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-    margin-bottom: 25px;
-    text-align: center;
-}
-
-.hourly-items-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    padding: 0 5px;
-}
-
-.hourly-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 8px 12px;
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    min-width: 75px;
-    transition: transform 0.2s ease, background-color 0.2s ease;
-    box-sizing: border-box;
-}
-
-.hourly-item:hover {
-    transform: translateY(-5px);
-    background-color: rgba(255, 255, 255, 0.15);
-}
-
-.hourly-time {
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-bottom: 3px;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.hourly-icon .wi, .hourly-icon .bi {
-    font-size: 2rem;
-    color: #ffffff;
-    margin-bottom: 3px;
-}
-
-.hourly-temperature {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #ffffff;
-    margin-top: 3px;
-}
-
-/* Clothing Suggestion Card Styles */
-.clothing-suggestion-card {
-    /* Wypełnia pozostałą przestrzeń */
-    /* flex-grow: 1 jest już ustawiony w Home.js */
-    padding: 20px; /* Dostosuj padding */
-    margin-left: 20px; /* Odstęp od lewej karty na desktopie */
-    /* Remove if you want it to stretch vertically */
-    /* height: auto; */
-}
-
-@media (max-width: 767.98px) {
-    .clothing-suggestion-card {
-        margin-left: 0;
-        margin-top: 20px;
-    }
-}
-
-/* General card body flex to distribute content */
-.card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* To rozciągnie zawartość na całą wysokość Card.Body */
-}
-
-/* Background classes for weather */
-.clear-sky {
-    background: linear-gradient(135deg, #87CEEB 0%, #00BFFF 100%);
-
-    background-size: cover;
-    background-position: center;
-}
-
-.clouds {
-    background: linear-gradient(135deg, #B0C4DE 0%, #778899 100%);
-    background-size: cover;
-    background-position: center;
-}
-
-.rain {
-    background: linear-gradient(135deg, #6A5ACD 0%, #483D8B 100%);
-    background-size: cover;
-    background-position: center;
-}
-
-.snow {
-    background: linear-gradient(135deg, #ADD8E6 0%, #87CEFA 100%);
-    background-size: cover;
-    background-position: center;
-}
-/* ... (pozostałe style) ... */
-
-/* High Contrast Mode */
-.high-contrast body {
-    background-color: #000 !important;
-    color: #fff !important;
-}
-
-.high-contrast .weather-card,
-.high-contrast .hourly-forecast-card,
-.high-contrast .clothing-suggestion-card {
-    background-color: #333 !important;
-    border-color: #fff !important;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5) !important;
-}
-
-.high-contrast .greeting-title,
-.high-contrast .location-title,
-.high-contrast .temperature,
-.high-contrast .condition,
-.high-contrast .weather-details span,
-.high-contrast .hourly-forecast-title,
-.high-contrast .hourly-time,
-.high-contrast .hourly-temperature {
-    color: #fff !important;
-}
-
-.high-contrast .btn-primary {
-    background-color: #0055aa !important;
-    border-color: #fff !important;
-    color: #fff !important;
-}
-
-.high-contrast .golden-line {
-    background-color: #ffdd00 !important;
-}
-
-/* Font Size Adjustments */
-.font-small {
-    font-size: 0.85rem !important;
-}
-
-.font-normal {
-    font-size: 1rem !important;
-}
-
-.font-large {
-    font-size: 1.2rem !important;
-}
-
-.font-large .navbar-title {
-    font-size: 1.8rem !important;
-}
-
-.font-large .navbar-link {
-    font-size: 1.3rem !important;
-}
-
-.font-large .temperature {
-    font-size: 3.5rem !important;
-}
-
-.font-large .weather-icon,
-.font-large .weather-icon-large {
-    font-size: 5.5rem !important;
-}
-
-.font-large .greeting-title {
-    font-size: 2.5rem !important;
-}
-
-.font-large h1 {
-    font-size: 2.5rem !important;
-}
-
-.greeting-title {
-    font-size: 0.5rem;
-}
-.current-location-button {
-    background-color: #545b62; /* Kolor przycisku secondary z Bootstrap */
-    border-color: #4e555b;
-    color: white;
-    padding: 0.375rem 0.75rem; /* Standardowy padding przycisku Bootstrap */
-    font-size: 1rem;
-    line-height: 1.5;
-    border-radius: 0.95rem;
-    min-width: 45px; /* Minimalna szerokość dla ikonki */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 5px; /* Dodaj trochę odstępu od przycisku Szukaj */
-    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-}
-
-.current-location-button:hover {
-    background-color: #5a6268; /* Ciemniejszy odcień przy najechaniu */
-    border-color: #545b62;
-}
-
-.current-location-button:active {
-    background-color: #545b62 !important;
-    border-color: #4e555b !important;
-}
-.current-weather-summary-card {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.125);
-    backdrop-filter: blur(10px);
-    color: white;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-}
-
-.weather-icon-large {
-    font-size: 4rem; /* Większa ikona dla obecnej pogody */
-    margin-right: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.temperature-large {
-    font-size: 3.5rem;
-    font-weight: bold;
-    margin-bottom: 0;
-    line-height: 1;
-}
-
-.condition-large {
-    font-size: 1.5rem;
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.weather-details-list {
-    padding-left: 0;
-    list-style: none;
-    margin-top: 20px;
-}
-
-.weather-details-list li {
-    font-size: 1.1rem;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end; /* Wyrównanie do prawej w szczegółach */
-    text-align: right; /* Tekst również wyrównany do prawej */
-}
-
-/* Dostosowanie dla małych ekranów, aby szczegóły były do lewej */
-@media (max-width: 767.98px) {
-    .weather-details-list li {
-        justify-content: flex-start;
-        text-align: left;
-    }
-}
-
-
-.info-icon {
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.7);
-    cursor: help; /* Zmienia kursor na znak zapytania */
-    margin-left: 5px;
-}
-
-/* Stylizacja dymka Tooltip */
-.tooltip-inner {
-    background-color: rgba(0, 0, 0, 0.85); /* Ciemniejsze tło */
-    color: #fff;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    text-align: center;
-}
-
-.tooltip.bs-tooltip-top .tooltip-arrow::before {
-    border-top-color: rgba(0, 0, 0, 0.85);
-}
-.tooltip.bs-tooltip-bottom .tooltip-arrow::before {
-    border-bottom-color: rgba(0, 0, 0, 0.85);
-}
-.tooltip.bs-tooltip-left .tooltip-arrow::before {
-    border-left-color: rgba(0, 0, 0, 0.85);
-}
-.tooltip.bs-tooltip-right .tooltip-arrow::before {
-    border-right-color: rgba(0, 0, 0, 0.85);
-}
-
-
-/* Stylizacja prognozy godzinowej (może być podobna do tej z Home.js, ale dostosowana) */
-.hourly-forecast-card {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.125);
-    backdrop-filter: blur(10px);
-    color: white;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-}
-
-.hourly-scroll-container {
-    display: flex;
-    overflow-x: auto; /* Pozwala na przewijanie w poziomie */
-    padding-bottom: 10px; /* Miejsce na scrollbar */
-    -webkit-overflow-scrolling: touch; /* Lepsze przewijanie na iOS */
-    scrollbar-width: thin; /* Firefox */
-    scrollbar-color: #f8c630 rgba(255, 255, 255, 0.1); /* Firefox thumb and track */
-}
-
-/* Webkit scrollbar */
-.hourly-scroll-container::-webkit-scrollbar {
-    height: 8px;
-}
-
-.hourly-scroll-container::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-}
-
-.hourly-scroll-container::-webkit-scrollbar-thumb {
+    height: 3px;
     background: #f8c630;
-    border-radius: 10px;
+    width: 60px;
+    margin: 10px auto 20px;
+    border-radius: 2px;
+}
+/* Wymuszenie tła dla kart, aby uniknąć białego koloru Bootstrapa */
+.card.glass-card {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: white !important;
 }
 
-.hourly-item {
-    flex: 0 0 auto; /* Nie rozciągaj elementów */
-    width: 80px; /* Stała szerokość elementu godzinowego */
-    text-align: center;
-    margin-right: 15px; /* Odstęp między elementami */
-    padding: 10px 5px;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    transition: transform 0.2s ease;
-}
-
-.hourly-item:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.hourly-time {
-    font-weight: bold;
-    font-size: 1.1rem;
-}
-
-.hourly-icon {
-    font-size: 1.8rem; /* Rozmiar ikonki godzinowej */
-    margin: 5px 0;
-}
-
-.hourly-temperature {
-    font-size: 1.2rem;
-    font-weight: 500;
-}
-
-.hourly-condition {
-    font-size: 0.85rem;
-    opacity: 0.8;
-}
-
-/* Styling for daily forecast cards */
-.forecast-day-card {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.125);
-    backdrop-filter: blur(10px);
-    color: white;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.forecast-day-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-.forecast-day-card .day-name {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: #f8c630; /* Golden accent */
-}
-
-.forecast-day-card .date {
-    font-size: 0.9rem;
-    opacity: 0.8;
-    margin-bottom: 10px;
-}
-
-.forecast-day-card .weather-icon {
-    font-size: 2.5rem;
-    margin: 10px 0;
-}
-
-.forecast-day-card .condition-text {
-    font-size: 1rem;
-    margin-bottom: 10px;
-}
-
-.forecast-day-card .temp-range {
-    font-size: 1.1rem;
-    font-weight: 500;
-}
-
-.forecast-day-card .high-temp {
-    color: #ffcc00; /* Jaśniejszy żółty */
-}
-
-.forecast-day-card .low-temp {
-    color: #a0d9ff; /* Jasny niebieski */
-}
-
-.forecast-day-card .precipitation {
-    font-size: 0.9rem;
-    opacity: 0.9;
-}
-/* Dodaj te style do pliku StylesPages.css */
-
-/* Karty obecnych warunków i szczegółów */
-.current-weather-card,
-.weather-details-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 15px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-/* Lista szczegółów pogodowych */
-.weather-details-list {
-    margin: 0;
-    padding: 0;
-}
-
-.detail-item {
+/* Fix dla widoczności tekstu w wierszach godzinowych */
+.hourly-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 12px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
-    font-size: 16px;
+    color: white !important; /* Wymuszenie białego tekstu */
 }
 
-.detail-item:last-child {
-    border-bottom: none;
-}
-
-.detail-item span {
-    flex: 1;
-}
-
-/* Ikona znaku zapytania */
-.info-icon {
-    color: #ffd700;
-    cursor: pointer;
-    font-size: 14px;
-    transition: color 0.3s ease;
-}
-
-.info-icon:hover {
-    color: #ffed4a;
-}
-
-/* Tooltip customowy */
-.custom-tooltip .tooltip-inner {
-    background-color: rgba(0, 0, 0, 0.9);
-    color: white;
-    border-radius: 8px;
-    padding: 8px 12px;
-    max-width: 300px;
-    font-size: 13px;
-    line-height: 1.4;
-}
-
-.custom-tooltip .tooltip-arrow::before {
-    border-top-color: rgba(0, 0, 0, 0.9) !important;
-}
-
-/* Poziome przewijanie prognozy godzinowej */
-.hourly-scroll-container-horizontal {
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 10px 0;
-    margin: 0 -10px;
-}
-
-.hourly-items-wrapper {
-    display: flex;
-    gap: 20px;
-    padding: 0 10px;
-    min-width: max-content;
-}
-
-.hourly-item-horizontal {
-    flex-shrink: 0;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+/* Poprawiony kontener szukajki */
+.search-container {
+    background: rgba(255, 255, 255, 0.1) !important;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    padding: 15px 12px;
-    text-align: center;
-    min-width: 120px;
-    max-width: 140px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.hourly-item-horizontal:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-}
-
-.hourly-time {
-    font-weight: 600;
-    color: #ffd700;
-    font-size: 14px;
-    margin-bottom: 8px;
-}
-
-.hourly-icon {
-    font-size: 24px;
-    margin: 8px 0;
-    height: 30px;
+    border-radius: 50px;
+    padding: 8px 15px;
     display: flex;
     align-items: center;
-    justify-content: center;
 }
 
-.hourly-temperature {
-    font-weight: 700;
-    color: white;
-    font-size: 16px;
-    margin: 8px 0;
+.search-input {
+    background: transparent !important;
+    border: none !important;
+    color: white !important;
+    box-shadow: none !important;
 }
 
-.hourly-condition {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.8);
-    line-height: 1.2;
-    margin: 6px 0;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+/* Poprawiony pasek nawigacyjny dla lepszej widoczności */
+.navbar {
+    background: rgba(15, 23, 42, 0.8) !important; /* Ciemniejszy, głęboki odcień granatu[cite: 12] */
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; /* Delikatna linia graniczna[cite: 12] */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); /* Cieñ dodający głębi i oddzielający od tła */
+    padding: 12px 0 !important;
+    transition: all 0.3s ease;
 }
 
-.hourly-precipitation {
-    font-size: 11px;
-    color: #87CEEB;
-    margin-top: 6px;
-    font-weight: 500;
+/* Opcjonalnie: zmiana koloru linków przy najechaniu, aby pasowały do żółtych akcentów[cite: 12] */
+.nav-link:hover {
+    color: #f8c630 !important; /* Twój złoty kolor[cite: 11, 12] */
+}
+/* FIX DLA NAVBARA */
+.navbar {
+    background: rgba(15, 23, 42, 0.9) !important; /* Ciemniejszy i bardziej kryjący */
+    backdrop-filter: blur(15px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
-/* Scrollbar dla poziomego przewijania */
-.hourly-scroll-container-horizontal::-webkit-scrollbar {
-    height: 8px;
+/* KONTENER DLA TREŚCI[cite: 10] */
+.weather-content-wrapper {
+    min-height: 100vh;
+    transition: background 1s ease-in-out; /* Płynne przejście kolorów */
 }
 
-.hourly-scroll-container-horizontal::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
+/* DYNAMICZNE TŁA[cite: 10, 11] */
+.clear-sky {
+    background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%) !important; /* Jasny błękit */
 }
 
-.hourly-scroll-container-horizontal::-webkit-scrollbar-thumb {
-    background: rgba(255, 215, 0, 0.6);
-    border-radius: 10px;
+.clouds {
+    background: linear-gradient(180deg, #3a4b63 0%, #2c394b 100%) !important; /* Twoje obecne szaro-granatowe */
 }
 
-.hourly-scroll-container-horizontal::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 215, 0, 0.8);
+.rain {
+    background: linear-gradient(180deg, #203a43 0%, #2c5364 100%) !important; /* Ciemniejszy, morski granat */
 }
 
-/* Responsive dla prognozy godzinowej */
-@media (max-width: 768px) {
-    .hourly-item-horizontal {
-        min-width: 100px;
-        max-width: 120px;
-        padding: 12px 8px;
-    }
-
-    .hourly-items-wrapper {
-        gap: 15px;
-    }
-
-    .hourly-temperature {
-        font-size: 15px;
-    }
-
-    .hourly-condition {
-        font-size: 11px;
-        height: 28px;
-    }
+.storm {
+    background: linear-gradient(180deg, #0f2027 0%, #203a43 100%) !important; /* Bardzo ciemny */
 }
 
-/* Linie złote */
-.golden-line {
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #ffd700, transparent);
-    margin: 0 auto;
-    width: 80%;
-}
-
-/* Ikony pogodowe - większe */
-.weather-icon-large {
-    font-size: 3rem;
-}
-
-/* Temperatury */
-.temperature-large {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: white;
-}
-
-.condition-large {
-    font-size: 1.2rem;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-/* Zakresy temperatur */
-.temp-range {
-    color: rgba(255, 255, 255, 0.9);
-    margin: 10px 0;
-}
-
-.high-temp {
-    color: #ff6b6b;
-    font-weight: 600;
-}
-
-.low-temp {
-    color: #74c0fc;
-    font-weight: 600;
+.default-weather {
+    background: linear-gradient(180deg, #2c394b 0%, #1e2732 100%) !important;
 }

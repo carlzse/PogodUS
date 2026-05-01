@@ -1,60 +1,20 @@
-/* Clothing Suggestion Styles */
-.clothing-suggestion-card {
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease;
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.125);
-    backdrop-filter: blur(10px);
-    color: white;
-}
-
-.clothing-suggestion-card:hover {
-    transform: translateY(-5px);
-}
-
+/* Clothing Suggestion Styles — uzupełnienie dla karty ubioru */
 .clothing-suggestion-card .card-title {
     font-size: 1.4rem;
     font-weight: 600;
     color: #f8c630;
 }
-
-.clothing-suggestion-card .clothing-icon {
-    font-size: 1.5rem;
+.clothing-suggestion-card .list-group-item {
+    background: rgba(0,0,0,0.2) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
-
-/* High Contrast Mode Adjustments */
-.high-contrast .clothing-suggestion-card {
-    background-color: #000 !important;
-    color: #fff !important;
-    border: 2px solid #fff !important;
+.clothing-suggestion-card .badge {
+    background: none;
+    border: 1px solid #f8c630;
+    color: #f8c630;
+    font-weight: 500;
 }
-
-.high-contrast .clothing-suggestion-card .card-title {
-    color: #ffdd00 !important;
-}
-
-/* Font Size Adjustments */
-.font-large .clothing-suggestion-card .card-title {
-    font-size: 1.6rem !important;
-}
-
-.font-large .clothing-suggestion-card p,
-.font-large .clothing-suggestion-card li {
-    font-size: 1.3rem !important;
-}
-
-.font-large .clothing-suggestion-card .clothing-icon {
-    font-size: 1.8rem !important;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .clothing-suggestion-card .card-title {
-        font-size: 1.2rem;
-    }
-
-    .clothing-suggestion-card .clothing-icon {
-        font-size: 1.3rem;
-    }
+.clothing-suggestion-card .bg-black-opacity-25 {
+    background: rgba(0,0,0,0.3);
+    border-radius: 24px;
 }

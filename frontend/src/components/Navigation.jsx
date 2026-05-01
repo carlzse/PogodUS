@@ -89,16 +89,18 @@ const Navigation = () => {
 
     return (
         <>
-            <Navbar expand="lg" className="navbar" variant="dark">
+            <Navbar expand="lg" className="navbar border-0 bg-transparent py-3" variant="dark">
                 <Container>
-                    <Navbar.Brand as={Link} to="/" className="navbar-title">PogodUŚ</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                    <Navbar.Brand as={Link} to="/" className="navbar-title fs-3">PogodUŚ</Navbar.Brand>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" className="border-0" />
                     <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="me-auto">
-                            <Nav.Link as={Link} to="/">{t.start}</Nav.Link>
-                            <Nav.Link as={Link} to="/forecast">{t.forecast}</Nav.Link>
-                            <Nav.Link as={Link} to="/favorites">{t.favorites}</Nav.Link>
-                            {user && <Nav.Link as={Link} to="/wardrobe" className="fw-bold text-warning">{t.wardrobe}</Nav.Link>}
+                        <Nav className="mx-auto"> {/* Wyśrodkowanie linków jak na wzorze */}
+                            <Nav.Link as={Link} to="/" className="mx-2">{t.start}</Nav.Link>
+                            <Nav.Link as={Link} to="/forecast" className="mx-2">{t.forecast}</Nav.Link>
+                            <Nav.Link as={Link} to="/favorites" className="mx-2">{t.favorites}</Nav.Link>
+                            <Nav.Link as={Link} to="/wardrobe" className="navbar-link">
+                                <i className="bi bi-door-closed me-1"></i> Szafa
+                            </Nav.Link>
                         </Nav>
                         <Nav className="align-items-center">
                             {user ? (

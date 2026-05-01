@@ -13,54 +13,108 @@ public class RecommendationService {
     @Autowired
     private WardrobeRepository wardrobeRepository;
 
-    public List<WardrobeItem> getPersonalizedRecommendation(Long userId, double tempApparent, boolean isRaining) {
-        // 1. Oblicz cel izolacji (CLO)
-        double targetClo = (31.0 - tempApparent) / 10.0;
-        if (targetClo < 0.2) targetClo = 0.2;
+    // Definicje slotów (kategorie ubrań)
+    private static final List<String> BASE_TOP = Arrays.asList(
+            "T-shirt", "Koszula (długi rękaw)", "Bielizna termo"
+    );
+    private static final List<String> MID_LAYER = Arrays.asList(
+            "Bluza / Sweter", "Polar", "Sweter wełniany"
+    );
+    private static final List<String> OUTER = Arrays.asList(
+            "Kurtka lekka", "Kurtka zimowa", "Parka", "Softshell", "Wiatrówka"
+    );
+    private static final List<String> BOTTOM = Arrays.asList(
+            "Spodnie (lekkie)", "Jeansy", "Spodnie wełniane", "Spodnie termo"
+    );
 
-        // 2. Pobierz ubrania użytkownika
-        List<WardrobeItem> myItems = wardrobeRepository.findAll().stream()
+    /**
+     * Oblicza docelową wartość CLO na podstawie temperatury odczuwalnej,
+     * opadów i prędkości wiatru.
+     */
+    public double calculateTargetClo(double tempApparent, boolean isRaining, double windSpeed) {
+        double targetClo = (24.0 - tempApparent) / 7.0;
+        if (targetClo < 0.2) targetClo = 0.2;
+        if (isRaining) targetClo += 0.2;
+        if (windSpeed > 20.0) targetClo += 0.1;
+        return targetClo;
+    }
+
+    /**
+     * Główna metoda rekomendacji – zwraca optymalny zestaw ubrań.
+     */
+    public List<WardrobeItem> getPersonalizedRecommendation(Long userId, double tempApparent,
+                                                            boolean isRaining, double windSpeed) {
+        double targetClo = calculateTargetClo(tempApparent, isRaining, windSpeed);
+
+        List<WardrobeItem> allItems = wardrobeRepository.findAll().stream()
                 .filter(item -> item.getUserId().equals(userId))
                 .collect(Collectors.toList());
 
-        if (myItems.isEmpty()) return new ArrayList<>();
+        if (allItems.isEmpty()) return Collections.emptyList();
 
-        // 3. Grupujemy po kategorii (np. "T-shirt", "Jeansy")
-        Map<String, List<WardrobeItem>> categorized = myItems.stream()
-                .collect(Collectors.groupingBy(WardrobeItem::getCategory));
-
-        List<WardrobeItem> selectedSet = new ArrayList<>();
-
-        // 4. Logika wyboru warstw (Dopasowana do Twoich polskich nazw w Wardrobe.js)
-
-        // SLOT: DÓŁ (Spodnie)
-        pick(categorized, List.of("Jeansy", "Spodnie (lekkie)"), selectedSet);
-
-        // SLOT: GÓRA (Baza)
-        pick(categorized, List.of("T-shirt", "Koszula (długi rękaw)", "Bielizna termo"), selectedSet);
-
-        // SLOT: WARSTWA DOCIEPLAJĄCA / PRZECIWDESZCZOWA
-        if (isRaining) {
-            // Priorytet dla ubrań wodoodpornych w zimne/deszczowe dni
-            Optional<WardrobeItem> rainGear = myItems.stream()
-                    .filter(WardrobeItem::isWaterproof)
-                    .findFirst();
-            rainGear.ifPresent(item -> {
-                if (!selectedSet.contains(item)) selectedSet.add(item);
-            });
-        } else if (tempApparent < 18.0) {
-            pick(categorized, List.of("Bluza / Sweter", "Kurtka lekka", "Kurtka zimowa"), selectedSet);
-        }
-
-        return selectedSet;
+        return findOptimalSet(allItems, targetClo, isRaining, windSpeed > 20.0);
     }
 
-    private void pick(Map<String, List<WardrobeItem>> categorized, List<String> preferences, List<WardrobeItem> selected) {
-        for (String pref : preferences) {
-            if (categorized.containsKey(pref) && !categorized.get(pref).isEmpty()) {
-                selected.add(categorized.get(pref).get(0));
-                break; // Znaleźliśmy najlepszy odpowiednik dla tego slotu
+    /**
+     * Przeszukuje wszystkie kombinacje warstw i wybiera tę z sumą CLO najbliższą targetClo,
+     * uwzględniając wymagania wodoodporności i wiatroszczelności.
+     */
+    private List<WardrobeItem> findOptimalSet(List<WardrobeItem> allItems, double targetClo,
+                                              boolean isRaining, boolean isWindy) {
+        List<WardrobeItem> baseOptions   = filterByCategories(allItems, BASE_TOP);
+        List<WardrobeItem> midOptions    = filterByCategories(allItems, MID_LAYER);
+        List<WardrobeItem> outerOptions  = filterByCategories(allItems, OUTER);
+        List<WardrobeItem> bottomOptions = filterByCategories(allItems, BOTTOM);
+
+        if (baseOptions.isEmpty() || bottomOptions.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<WardrobeItem> bestSet = null;
+        double bestDiff = Double.MAX_VALUE;
+        int bestLayers = 0;
+
+        for (WardrobeItem base : baseOptions) {
+            for (WardrobeItem bottom : bottomOptions) {
+                for (WardrobeItem mid : withNull(midOptions)) {
+                    for (WardrobeItem outer : withNull(outerOptions)) {
+                        // Walidacja warstwy zewnętrznej względem warunków
+                        if (isRaining && outer != null && !outer.isWaterproof()) continue;
+                        if (isWindy && outer != null && !outer.isWindproof()) continue;
+
+                        double totalClo = base.getEstimatedClo() + bottom.getEstimatedClo();
+                        if (mid != null) totalClo += mid.getEstimatedClo();
+                        if (outer != null) totalClo += outer.getEstimatedClo();
+
+                        int layers = 2 + (mid != null ? 1 : 0) + (outer != null ? 1 : 0);
+                        double diff = Math.abs(totalClo - targetClo);
+
+                        if (diff < bestDiff - 0.01 ||
+                                (Math.abs(diff - bestDiff) < 0.01 && layers < bestLayers)) {
+                            bestDiff = diff;
+                            bestLayers = layers;
+                            bestSet = new ArrayList<>();
+                            bestSet.add(base);
+                            bestSet.add(bottom);
+                            if (mid != null) bestSet.add(mid);
+                            if (outer != null) bestSet.add(outer);
+                        }
+                    }
+                }
             }
         }
+        return bestSet != null ? bestSet : Collections.emptyList();
+    }
+
+    private List<WardrobeItem> filterByCategories(List<WardrobeItem> items, List<String> categories) {
+        return items.stream()
+                .filter(i -> categories.contains(i.getCategory()))
+                .collect(Collectors.toList());
+    }
+
+    private List<WardrobeItem> withNull(List<WardrobeItem> list) {
+        List<WardrobeItem> result = new ArrayList<>(list);
+        result.add(null);
+        return result;
     }
 }

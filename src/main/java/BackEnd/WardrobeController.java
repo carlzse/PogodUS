@@ -1,6 +1,7 @@
 package BackEnd;
 
 import BackEnd.Service.RecommendationDto;
+import BackEnd.Service.RecommendationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,11 +9,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/wardrobe")
-@CrossOrigin(origins = "http://localhost:3000") // Bardzo ważne: pozwala Reactowi wysłać dane
+@CrossOrigin(origins = "http://localhost:3000")
 public class WardrobeController {
 
     @Autowired
     private WardrobeRepository wardrobeRepository;
+
+    @Autowired
+    private RecommendationService recommendationService;
 
     @PostMapping
     public WardrobeItem addItem(@RequestBody WardrobeItem item) {
@@ -25,23 +29,15 @@ public class WardrobeController {
         return wardrobeRepository.findAll();
     }
 
-    @Autowired
-    private BackEnd.Service.RecommendationService recommendationService;
-
     @GetMapping("/recommendation")
     public RecommendationDto getRecommendation(
             @RequestParam Long userId,
             @RequestParam double temp,
-            @RequestParam boolean rain) {
+            @RequestParam boolean rain,
+            @RequestParam double windSpeed) {   // nowy parametr
 
-        // 1. Wywołujemy istniejącą metodę (bez jej modyfikacji)[cite: 11, 14]
-        List<WardrobeItem> items = recommendationService.getPersonalizedRecommendation(userId, temp, rain);
-
-        // 2. Wyliczamy targetClo zgodnie z Twoim wzorem
-        double targetClo = (31.0 - temp) / 10.0;
-        if (targetClo < 0.2) targetClo = 0.2;
-
-        // 3. Zwracamy nowy obiekt DTO zamiast samej listy[cite: 14]
+        List<WardrobeItem> items = recommendationService.getPersonalizedRecommendation(userId, temp, rain, windSpeed);
+        double targetClo = recommendationService.calculateTargetClo(temp, rain, windSpeed);
         return new RecommendationDto(items, targetClo);
     }
 }

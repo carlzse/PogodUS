@@ -4,7 +4,6 @@ import axios from 'axios';
 
 const ClothingSuggestion = ({ latitude, longitude }) => {
     const [recommendation, setRecommendation] = useState([]);
-    // ROZWIĄZANIE BŁĘDU: Deklaracja brakującego stanu targetClo
     const [targetClo, setTargetClo] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -18,18 +17,21 @@ const ClothingSuggestion = ({ latitude, longitude }) => {
             }
 
             try {
-                const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=apparent_temperature,precipitation&timezone=auto`);
+                // Pobranie temperatury odczuwalnej, opadów i prędkości wiatru
+                const weatherRes = await fetch(
+                    `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=apparent_temperature,precipitation,windspeed_10m&timezone=auto`
+                );
                 const weatherData = await weatherRes.json();
                 const temp = weatherData.current.apparent_temperature;
                 const isRaining = weatherData.current.precipitation > 0;
+                const windSpeed = weatherData.current.windspeed_10m;
 
                 const res = await axios.get(`http://localhost:8080/api/wardrobe/recommendation`, {
-                    params: { userId: userData.id, temp: temp, rain: isRaining }
+                    params: { userId: userData.id, temp: temp, rain: isRaining, windSpeed: windSpeed }
                 });
 
-                // Przypisanie danych z obiektu RecommendationDto
                 setRecommendation(res.data.items || []);
-                setTargetClo(res.data.targetClo || 0); // Tutaj setTargetClo jest już zdefiniowane
+                setTargetClo(res.data.targetClo || 0);
                 setError(null);
             } catch (err) {
                 console.error("Błąd:", err);
@@ -75,7 +77,6 @@ const ClothingSuggestion = ({ latitude, longitude }) => {
                             <Row className="text-center g-0">
                                 <Col>
                                     <div className="text-muted small">CEL (POGODA)</div>
-                                    {/* targetClo jest już widoczne w tym zakresie */}
                                     <div className="h5 mb-0 text-info">{targetClo.toFixed(2)}</div>
                                 </Col>
                                 <Col>

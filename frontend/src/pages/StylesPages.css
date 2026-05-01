@@ -209,3 +209,158 @@ body {
 .default-weather {
     background: linear-gradient(180deg, #2c394b 0%, #1e2732 100%) !important;
 }
+.snow {
+    background: linear-gradient(180deg, #5b86a6 0%, #2f4f63 100%) !important;
+}
+
+.weather-icon-large {
+    font-size: 4rem;
+}
+
+.temperature-large {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #f8c630;
+}
+
+.condition-large,
+.condition-text,
+.date,
+.precipitation,
+.hourly-condition,
+.hourly-time {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.hourly-items-wrapper {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+}
+
+.hourly-item-horizontal {
+    min-width: 140px;
+    text-align: center;
+    padding: 12px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hourly-icon {
+    font-size: 1.8rem;
+    margin: 6px 0;
+}
+
+.hourly-temperature,
+.high-temp {
+    color: #f8c630;
+    font-weight: 700;
+}
+
+.low-temp {
+    color: #b5d8ff;
+    font-weight: 600;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.info-icon {
+    color: #f8c630;
+    cursor: pointer;
+    font-style: normal;
+    font-size: 0.8rem;
+}
+.forecast-day-card,
+.current-weather-card,
+.weather-details-card,
+.hourly-forecast-card {
+    color: #ffffff !important;
+}
+
+.forecast-day-card .date,
+.forecast-day-card .condition-text,
+.condition-large,
+.hourly-condition {
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.temperature-large {
+    font-size: clamp(3rem, 6vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1;
+}
+
+.weather-icon-large {
+    font-size: 4rem;
+}
+
+.weather-details-list {
+    margin: 0;
+    padding: 0;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.info-icon {
+    color: #f8c630;
+    font-style: normal;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.hourly-scroll-container-horizontal {
+    overflow-x: auto;
+}
+
+.hourly-items-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+}
+
+.hourly-item-horizontal {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 12px 10px;
+}
+
+.hourly-time,
+.hourly-temperature {
+    font-weight: 700;
+}
+
+.hourly-temperature,
+.high-temp,
+.text-yellow {
+    color: #f8c630 !important;
+}
+
+.low-temp {
+    color: #9fc9ff;
+}

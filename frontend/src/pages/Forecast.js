@@ -12,6 +12,16 @@ const Forecast = () => {
     const [error, setError] = useState(null);
     const [currentWeatherDetails, setCurrentWeatherDetails] = useState(null);
     const [hourlyForecastToday, setHourlyForecastToday] = useState([]);
+    const [backgroundClass, setBackgroundClass] = useState('default-weather');
+
+    const getBackgroundClass = (weathercode) => {
+        if (weathercode === 0) return 'clear-sky';
+        if ([1, 2, 3].includes(weathercode)) return 'clouds';
+        if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(weathercode)) return 'rain';
+        if ([71, 73, 75, 77, 85, 86].includes(weathercode)) return 'snow';
+        if ([95, 96, 99].includes(weathercode)) return 'storm';
+        return 'default-weather';
+    };
 
     useEffect(() => {
         const fetchForecast = async () => {
@@ -93,7 +103,7 @@ const Forecast = () => {
 
             return (
                 <Col key={index} xs={12} sm={6} md={4} lg={2} className="mb-4">
-                    <Card className="forecast-day-card text-center h-100">
+                    <Card className="forecast-day-card glass-card text-center h-100 border-0">
                         <Card.Body>
                             <h5 className="day-name">{dayOfWeek}</h5>
                             <p className="date">{dayOfMonth}</p>
@@ -119,6 +129,7 @@ const Forecast = () => {
     };
 
     return (
+        <div className="weather-content-wrapper default-weather">
         <Container className="py-5">
             <h1 className="text-center mb-4 text-white">Prognoza pogody dla {locationName}</h1>
             <div className="golden-line mb-4"></div>
@@ -138,7 +149,7 @@ const Forecast = () => {
                         <Row className="mb-5 justify-content-center">
                             {/* Obecne Warunki - osobny blok */}
                             <Col xs={12} lg={6} className="mb-4 mb-lg-0">
-                                <Card className="current-weather-card h-100 p-4">
+                                <Card className="current-weather-card glass-card h-100 p-4 border-0">
                                     <h3 className="mb-3 text-white text-center">Obecne Warunki</h3>
                                     <div className="golden-line mb-4"></div>
                                     <div className="d-flex align-items-center justify-content-center mb-3">
@@ -169,7 +180,7 @@ const Forecast = () => {
 
                             {/* Szczegóły - osobny blok */}
                             <Col xs={12} lg={6}>
-                                <Card className="weather-details-card h-100 p-4">
+                                <Card className="weather-details-card glass-card h-100 p-4 border-0">
                                     <h4 className="mb-3 text-white text-center">Szczegóły</h4>
                                     <div className="golden-line mb-4"></div>
                                     <ul className="list-unstyled weather-details-list">
@@ -256,7 +267,7 @@ const Forecast = () => {
                     {hourlyForecastToday.length > 0 && (
                         <Row className="mb-5 justify-content-center">
                             <Col xs={12}>
-                                <Card className="hourly-forecast-card p-4">
+                                <Card className="hourly-forecast-card glass-card p-4 border-0">
                                     <Card.Body>
                                         <h4 className="hourly-forecast-title text-center text-white mb-4">Prognoza godzinowa na resztę dnia</h4>
                                         <div className="golden-line mb-4"></div>
@@ -291,6 +302,7 @@ const Forecast = () => {
                 </>
             )}
         </Container>
+        </div>
     );
 };
 

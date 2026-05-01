@@ -111,20 +111,6 @@ body {
     color: rgba(255, 255, 255, 0.5);
 }
 
-/* Style dla prognozy godzinowej (naprawa widoczności tekstu) */
-.hourly-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    color: white;
-}
-
-.hourly-row:last-child {
-    border-bottom: none;
-}
-
 .text-yellow {
     color: #f8c630 !important;
 }
@@ -145,13 +131,15 @@ body {
 /* Fix dla widoczności tekstu w wierszach godzinowych */
 .hourly-row {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
-    padding: 12px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px 0;
     color: white !important; /* Wymuszenie białego tekstu */
 }
-
+.hourly-row:last-child {
+    border-bottom: none;
+}
 /* Poprawiony kontener szukajki */
 .search-container {
     background: rgba(255, 255, 255, 0.1) !important;

@@ -72,18 +72,16 @@ const Home = () => {
 
     useEffect(() => { fetchUserLocationAndWeather(); }, []);
 
-    const currentHourIndex = currentWeather?.hourly?.time?.findIndex(
-        (t) => t === currentWeather?.current?.time
-    ) ?? -1;
-
-    const startIndex = currentHourIndex >= 0 ? currentHourIndex : 0;
+    const now = new Date();
     const hourlyForecastData = currentWeather?.hourly?.time
         ?.map((t, i) => ({
             time: t,
+            timestamp: new Date(t).getTime(),
             temperature: currentWeather.hourly.temperature_2m[i],
             weathercode: currentWeather.hourly.weathercode[i],
         }))
-        .slice(startIndex, startIndex + 8) || [];
+        .filter((item) => item.timestamp >= now.getTime())
+        .slice(0, 8) || [];
 
     return (
         /* Główny kontener z dynamiczną klasą tła[cite: 10] */

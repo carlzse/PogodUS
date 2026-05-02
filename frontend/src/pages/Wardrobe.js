@@ -117,7 +117,7 @@ const Wardrobe = () => {
             <Card className="p-3 mt-4 wardrobe-card">
                 <h5 className="wardrobe-title mb-3">Ubrania w bazie</h5>
                 <div className="wardrobe-table-wrap">
-                    <Table bordered hover className="wardrobe-table mb-0">
+                    <Table bordered hover className="wardrobe-table ">
                         <thead>
                         <tr>
                             <th>Kategoria</th>

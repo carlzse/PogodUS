@@ -1,3 +1,4 @@
+/* Główne kontenery */
 .wardrobe-page {
     color: #eaf2ff;
 }
@@ -19,6 +20,7 @@
     font-size: 0.95rem;
 }
 
+/* Formularz */
 .wardrobe-form .form-label {
     color: #d6e4ff;
     font-weight: 600;
@@ -54,6 +56,7 @@
     border-radius: 12px;
 }
 
+/* Tabela - Przywrócenie widoczności tekstu[cite: 13] */
 .wardrobe-table-wrap {
     overflow-x: auto;
 }
@@ -63,9 +66,27 @@
     --bs-table-striped-bg: rgba(255, 255, 255, 0.04);
     --bs-table-hover-bg: rgba(248, 198, 48, 0.09);
     --bs-table-border-color: rgba(255, 255, 255, 0.15);
-    color: #eaf2ff;
+    vertical-align: middle;
 }
 
+/* Wymuszenie jasnego koloru dla komórek[cite: 13] */
+.wardrobe-table th,
+.wardrobe-table td {
+    color: #eaf2ff !important;
+}
+
+/* Stylizacja nagłówka[cite: 13] */
+.wardrobe-table thead th {
+    color: #f8c630 !important;
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid rgba(248, 198, 48, 0.5) !important;
+}
+
+/* Tagi właściwości (Wodoodporne/Wiatroszczelne)[cite: 13, 14] */
 .wardrobe-tag {
     display: inline-block;
     font-size: 0.78rem;
@@ -73,5 +94,19 @@
     border-radius: 999px;
     margin-right: 8px;
     margin-bottom: 5px;
-    background: rgba(255, 255, 255, 0.14);
+    background: rgba(248, 198, 48, 0.15) !important;
+    border: 1px solid rgba(248, 198, 48, 0.4) !important;
+    color: #ffffff !important;
+}
+
+/* Poprawka dla tekstu "Brak"[cite: 13, 14] */
+.wardrobe-table .text-muted {
+    color: rgba(234, 242, 255, 0.45) !important;
+}
+
+/* Wyróżnienie wartości CLO[cite: 14] */
+.wardrobe-table td:last-child {
+    color: #f8c630 !important;
+    font-weight: 800 !important;
+    font-size: 1.05rem;
 }

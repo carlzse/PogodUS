@@ -33,6 +33,13 @@
     color: #ffffff !important;
 }
 
+/* POPRAWKA DLA ROZWIJALNEJ LISTY (Dropdown) */
+.wardrobe-form .form-select option {
+    background-color: #1a2233 !important; /* Ciemne tło pasujące do kart */
+    color: #ffffff !important;           /* Biały tekst na liście */
+    padding: 10px;
+}
+
 .wardrobe-form .form-control::placeholder {
     color: rgba(255, 255, 255, 0.65);
 }
@@ -41,6 +48,7 @@
 .wardrobe-form .form-select:focus {
     border-color: rgba(248, 198, 48, 0.7) !important;
     box-shadow: 0 0 0 0.2rem rgba(248, 198, 48, 0.22) !important;
+    background-color: rgba(255, 255, 255, 0.15) !important;
 }
 
 .wardrobe-form .form-check-label {
@@ -56,7 +64,7 @@
     border-radius: 12px;
 }
 
-/* Tabela - Przywrócenie widoczności tekstu[cite: 13] */
+/* Tabela - Przywrócenie widoczności tekstu */
 .wardrobe-table-wrap {
     overflow-x: auto;
 }
@@ -69,13 +77,13 @@
     vertical-align: middle;
 }
 
-/* Wymuszenie jasnego koloru dla komórek[cite: 13] */
+/* Wymuszenie jasnego koloru dla komórek */
 .wardrobe-table th,
 .wardrobe-table td {
     color: #eaf2ff !important;
 }
 
-/* Stylizacja nagłówka[cite: 13] */
+/* Stylizacja nagłówka */
 .wardrobe-table thead th {
     color: #f8c630 !important;
     background-color: rgba(0, 0, 0, 0.2) !important;
@@ -86,7 +94,7 @@
     border-bottom: 2px solid rgba(248, 198, 48, 0.5) !important;
 }
 
-/* Tagi właściwości (Wodoodporne/Wiatroszczelne)[cite: 13, 14] */
+/* Tagi właściwości (Wodoodporne/Wiatroszczelne) */
 .wardrobe-tag {
     display: inline-block;
     font-size: 0.78rem;
@@ -99,12 +107,12 @@
     color: #ffffff !important;
 }
 
-/* Poprawka dla tekstu "Brak"[cite: 13, 14] */
+/* Poprawka dla tekstu "Brak" */
 .wardrobe-table .text-muted {
     color: rgba(234, 242, 255, 0.45) !important;
 }
 
-/* Wyróżnienie wartości CLO[cite: 14] */
+/* Wyróżnienie wartości CLO */
 .wardrobe-table td:last-child {
     color: #f8c630 !important;
     font-weight: 800 !important;

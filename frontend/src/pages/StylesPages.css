@@ -194,8 +194,30 @@ body {
     background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%) !important; /* Jasny błękit */
 }
 
-.clouds {
-    background: linear-gradient(180deg, #3a4b63 0%, #2c394b 100%) !important; /* Twoje obecne szaro-granatowe */
+.partly-cloudy {
+    background: linear-gradient(180deg, #8896a8 0%, #64758a 100%) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.partly-cloudy::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.28;
+    background:
+            radial-gradient(circle at 20% 25%, #d8dde4 0 44px, transparent 46px),
+            radial-gradient(circle at 32% 25%, #c2cbd6 0 34px, transparent 36px),
+            radial-gradient(circle at 44% 25%, #d8dde4 0 42px, transparent 44px),
+            radial-gradient(circle at 70% 18%, #d3d9e0 0 36px, transparent 38px),
+            radial-gradient(circle at 79% 18%, #bcc7d3 0 28px, transparent 30px),
+            radial-gradient(circle at 88% 18%, #d3d9e0 0 34px, transparent 36px);
+    background-repeat: no-repeat;
+}
+
+.overcast {
+    background: linear-gradient(180deg, #596575 0%, #3f4a59 100%) !important;
 }
 
 .rain {

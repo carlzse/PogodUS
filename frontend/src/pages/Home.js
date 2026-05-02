@@ -23,7 +23,8 @@ const Home = () => {
     // Logika przypisywania klas tła na podstawie weathercode[cite: 10, 11]
     const getBackgroundClass = (weathercode) => {
         if (weathercode === 0) return 'clear-sky';
-        if ([1, 2, 3].includes(weathercode)) return 'clouds';
+        if (weathercode === 1) return 'partly-cloudy';
+        if ([2, 3].includes(weathercode)) return 'overcast';
         if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(weathercode)) return 'rain';
         if ([71, 73, 75, 77, 85, 86].includes(weathercode)) return 'snow';
         if ([95, 96, 99].includes(weathercode)) return 'storm';
@@ -71,12 +72,18 @@ const Home = () => {
 
     useEffect(() => { fetchUserLocationAndWeather(); }, []);
 
+    const currentHourIndex = currentWeather?.hourly?.time?.findIndex(
+        (t) => t === currentWeather?.current?.time
+    ) ?? -1;
+
+    const startIndex = currentHourIndex >= 0 ? currentHourIndex : 0;
     const hourlyForecastData = currentWeather?.hourly?.time
         ?.map((t, i) => ({
             time: t,
             temperature: currentWeather.hourly.temperature_2m[i],
             weathercode: currentWeather.hourly.weathercode[i],
-        })).slice(0, 8) || [];
+        }))
+        .slice(startIndex, startIndex + 8) || [];
 
     return (
         /* Główny kontener z dynamiczną klasą tła[cite: 10] */

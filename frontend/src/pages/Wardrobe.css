@@ -1,0 +1,77 @@
+.wardrobe-page {
+    color: #eaf2ff;
+}
+
+.wardrobe-card {
+    background: rgba(17, 25, 40, 0.72) !important;
+    border: 1px solid rgba(248, 198, 48, 0.28) !important;
+    border-radius: 22px !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.wardrobe-title {
+    font-weight: 700;
+    color: #f8c630;
+}
+
+.wardrobe-subtitle {
+    color: rgba(234, 242, 255, 0.8);
+    font-size: 0.95rem;
+}
+
+.wardrobe-form .form-label {
+    color: #d6e4ff;
+    font-weight: 600;
+}
+
+.wardrobe-form .form-control,
+.wardrobe-form .form-select {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.26) !important;
+    color: #ffffff !important;
+}
+
+.wardrobe-form .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.wardrobe-form .form-control:focus,
+.wardrobe-form .form-select:focus {
+    border-color: rgba(248, 198, 48, 0.7) !important;
+    box-shadow: 0 0 0 0.2rem rgba(248, 198, 48, 0.22) !important;
+}
+
+.wardrobe-form .form-check-label {
+    color: #d6e4ff;
+}
+
+.wardrobe-clo-preview {
+    font-size: 0.95rem;
+    color: #d6e4ff;
+    background: rgba(248, 198, 48, 0.1);
+    border: 1px dashed rgba(248, 198, 48, 0.45);
+    padding: 10px 14px;
+    border-radius: 12px;
+}
+
+.wardrobe-table-wrap {
+    overflow-x: auto;
+}
+
+.wardrobe-table {
+    --bs-table-bg: rgba(17, 25, 40, 0.65);
+    --bs-table-striped-bg: rgba(255, 255, 255, 0.04);
+    --bs-table-hover-bg: rgba(248, 198, 48, 0.09);
+    --bs-table-border-color: rgba(255, 255, 255, 0.15);
+    color: #eaf2ff;
+}
+
+.wardrobe-tag {
+    display: inline-block;
+    font-size: 0.78rem;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-right: 8px;
+    margin-bottom: 5px;
+    background: rgba(255, 255, 255, 0.14);
+}

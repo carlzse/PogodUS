@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Form, Button, Table, Card, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
+import './Wardrobe.css';
 
 const Wardrobe = () => {
     const [items, setItems] = useState([]);
     const [category, setCategory] = useState('T-shirt');
     const [material, setMaterial] = useState('Bawełna');
+    const [name, setName] = useState('');
     const [grammage, setGrammage] = useState('');
     const [isWaterproof, setIsWaterproof] = useState(false);
     const [isWindproof, setIsWindproof] = useState(false);
@@ -13,7 +15,6 @@ const Wardrobe = () => {
 
     const user = JSON.parse(localStorage.getItem('user'));
 
-    // Tabela bazowa CLO (Engineering Toolbox)
     const cloTable = {
         'T-shirt': 0.09,
         'Koszula (długi rękaw)': 0.22,
@@ -25,11 +26,9 @@ const Wardrobe = () => {
         'Bielizna termo': 0.15
     };
 
-    // Automatyczne przeliczanie CLO przy zmianie kategorii lub gramatury
     useEffect(() => {
         let base = cloTable[category] || 0.1;
         if (grammage > 0) {
-            // Prosta korekta: każde 100g powyżej średniej (200g) dodaje 5% izolacji
             const adjustment = (grammage - 200) / 2000;
             base = Math.max(0.05, base + adjustment);
         }
@@ -45,87 +44,105 @@ const Wardrobe = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const composedMaterial = name ? `${material} (${name})` : material;
         const newItem = {
             userId: user.id,
             category,
-            material,
+            material: composedMaterial,
             grammage: grammage || null,
             waterproof: isWaterproof,
             windproof: isWindproof,
             estimatedClo
         };
         await axios.post('http://localhost:8080/api/wardrobe', newItem);
+        setName('');
+        setGrammage('');
+        setIsWaterproof(false);
+        setIsWindproof(false);
         fetchItems();
     };
 
     return (
-        <Container className="mt-4 text-white">
-            <Card className="p-4 bg-dark border-warning">
-                <h3>Dodaj nowe ubranie</h3>
-                <Form onSubmit={handleSubmit}>
+        <Container className="mt-4 wardrobe-page">
+            <Card className="p-4 wardrobe-card">
+                <h3 className="wardrobe-title mb-1">Twoja garderoba</h3>
+                <p className="wardrobe-subtitle mb-4">Dodaj ubranie w 3 prostych krokach: wybierz typ, uzupełnij szczegóły i zapisz.</p>
+                <Form onSubmit={handleSubmit} className="wardrobe-form">
                     <Row>
-                        <Col md={6}>
+                        <Col md={4}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Kategoria</Form.Label>
+                                <Form.Label>1) Kategoria</Form.Label>
                                 <Form.Select value={category} onChange={(e) => setCategory(e.target.value)}>
                                     {Object.keys(cloTable).map(cat => <option key={cat} value={cat}>{cat}</option>)}
                                 </Form.Select>
                             </Form.Group>
                         </Col>
-                        <Col md={6}>
+                        <Col md={4}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Materiał</Form.Label>
+                                <Form.Label>2) Nazwa ubrania (opcjonalnie)</Form.Label>
+                                <Form.Control value={name} onChange={(e) => setName(e.target.value)} placeholder="np. Granatowa bluza sportowa" />
+                            </Form.Group>
+                        </Col>
+                        <Col md={4}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>3) Materiał</Form.Label>
                                 <Form.Control value={material} onChange={(e) => setMaterial(e.target.value)} placeholder="np. Bawełna" />
                             </Form.Group>
                         </Col>
                     </Row>
 
                     <Row>
-                        <Col md={6}>
+                        <Col md={4}>
                             <Form.Group className="mb-3">
                                 <Form.Label>Gramatura (g/m²)</Form.Label>
-                                <Form.Control type="number" value={grammage} onChange={(e) => setGrammage(e.target.value)} />
+                                <Form.Control type="number" min="0" value={grammage} onChange={(e) => setGrammage(e.target.value)} placeholder="np. 220" />
                             </Form.Group>
                         </Col>
-                        <Col md={6}>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Wyliczone CLO</Form.Label>
-                                <Form.Control type="number" step="0.01" value={estimatedClo} readOnly className="bg-secondary text-white" />
-                            </Form.Group>
+                        <Col md={8}>
+                            <div className="wardrobe-clo-preview mb-3 mt-md-4">
+                                Szacowana izolacja cieplna CLO: <strong>{estimatedClo}</strong>
+                            </div>
                         </Col>
                     </Row>
 
-                    <div className="d-flex gap-4 mb-3">
-                        <Form.Check type="checkbox" label="Wodoodporny" checked={isWaterproof} onChange={e => setIsWaterproof(e.target.checked)} />
-                        <Form.Check type="checkbox" label="Wiatroszczelny" checked={isWindproof} onChange={e => setIsWindproof(e.target.checked)} />
+                    <div className="d-flex flex-wrap gap-4 mb-3">
+                        <Form.Check type="checkbox" label="Wodoodporne" checked={isWaterproof} onChange={e => setIsWaterproof(e.target.checked)} />
+                        <Form.Check type="checkbox" label="Wiatroszczelne" checked={isWindproof} onChange={e => setIsWindproof(e.target.checked)} />
                     </div>
 
-                    <Button variant="warning" type="submit">Zapisz w szafie</Button>
+                    <Button variant="warning" type="submit">Dodaj ubranie</Button>
                 </Form>
             </Card>
 
-            <Table striped bordered hover variant="dark" className="mt-4">
-                <thead>
-                <tr>
-                    <th>Kategoria</th>
-                    <th>Materiał</th>
-                    <th>Właściwości</th>
-                    <th>CLO</th>
-                </tr>
-                </thead>
-                <tbody>
-                {items.map(item => (
-                    <tr key={item.id}>
-                        <td>{item.category}</td>
-                        <td>{item.material} ({item.grammage}g)</td>
-                        <td>
-                            {item.waterproof && "🌊"} {item.windproof && "💨"}
-                        </td>
-                        <td className="text-warning">{item.estimatedClo}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </Table>
+            <Card className="p-3 mt-4 wardrobe-card">
+                <h5 className="wardrobe-title mb-3">Ubrania w bazie</h5>
+                <div className="wardrobe-table-wrap">
+                    <Table bordered hover className="wardrobe-table mb-0">
+                        <thead>
+                        <tr>
+                            <th>Kategoria</th>
+                            <th>Materiał</th>
+                            <th>Właściwości</th>
+                            <th>CLO</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {items.map(item => (
+                            <tr key={item.id}>
+                                <td>{item.category}</td>
+                                <td>{item.material} {item.grammage ? `(${item.grammage}g)` : ''}</td>
+                                <td>
+                                    {item.waterproof && <span className="wardrobe-tag">🌊 Wodoodporne</span>}
+                                    {item.windproof && <span className="wardrobe-tag">💨 Wiatroszczelne</span>}
+                                    {!item.windproof && !item.waterproof && <span className="text-muted">Brak</span>}
+                                </td>
+                                <td className="text-warning fw-semibold">{item.estimatedClo}</td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </Table>
+                </div>
+            </Card>
         </Container>
     );
 };

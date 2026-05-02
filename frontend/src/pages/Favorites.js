@@ -1,157 +1,155 @@
-import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Card, Button, Form, ListGroup, Alert } from 'react-bootstrap';
+import React, { useState } from "react";
+import { Container, Row, Col, Card, Button, Form, Alert, Spinner } from 'react-bootstrap';
 import { Link } from "react-router-dom";
+import { getCoordinatesForLocation, getWeatherForCoordinates, getWeatherDescription, getWeatherIcon } from "../components/GeolocationService";
 import "./StylesPages.css";
 
+const initialFavorites = [
+    { id: 1, name: "Warszawa", temp: 12, weathercode: 0, latitude: 52.2297, longitude: 21.0122 },
+    { id: 2, name: "Londyn", temp: 15, weathercode: 3, latitude: 51.5074, longitude: -0.1278 },
+    { id: 3, name: "Tokio", temp: 8, weathercode: 2, latitude: 35.6762, longitude: 139.6503 }
+];
+
 const Favorites = () => {
-    const [favorites, setFavorites] = useState([
-        { id: 1, name: "Warszawa", temp: 12, condition: "Słonecznie" },
-        { id: 2, name: "Londyn", temp: 15, condition: "Pochmurno" },
-        { id: 3, name: "Tokio", temp: 8, condition: "Częściowo Zachmurzone" }
-    ]);
+    const [favorites, setFavorites] = useState(initialFavorites);
     const [newLocation, setNewLocation] = useState("");
     const [showAlert, setShowAlert] = useState(false);
     const [alertVariant, setAlertVariant] = useState("success");
     const [alertMessage, setAlertMessage] = useState("");
+    const [isAdding, setIsAdding] = useState(false);
 
-    const handleAddFavorite = (e) => {
+    const handleAddFavorite = async (e) => {
         e.preventDefault();
+        const normalizedLocation = newLocation.trim();
 
-        // Check if location already exists
-        if (favorites.some(fav => fav.name.toLowerCase() === newLocation.toLowerCase())) {
+        if (!normalizedLocation) return;
+
+        if (favorites.some((fav) => fav.name.toLowerCase() === normalizedLocation.toLowerCase())) {
             setAlertVariant("warning");
-            setAlertMessage(`${newLocation} is already in your favorites!`);
+            setAlertMessage(`${normalizedLocation} jest już na liście ulubionych.`);
             setShowAlert(true);
             setTimeout(() => setShowAlert(false), 3000);
             return;
         }
 
-        // In a real application, this would fetch real weather data
-        const newFavorite = {
-            id: favorites.length + 1,
-            name: newLocation,
-            temp: Math.floor(Math.random() * 30) + 50, // Random temp between 50-80
-            condition: ["Sunny", "Cloudy", "Rainy", "Partly Cloudy"][Math.floor(Math.random() * 4)]
-        };
+        try {
+            setIsAdding(true);
+            const { latitude, longitude, name } = await getCoordinatesForLocation(normalizedLocation);
+            const weatherData = await getWeatherForCoordinates(latitude, longitude);
 
-        setFavorites([...favorites, newFavorite]);
-        setNewLocation("");
+            const newFavorite = {
+                id: Date.now(),
+                name,
+                temp: Math.round(weatherData.current.temperature_2m),
+                weathercode: weatherData.current.weathercode,
+                latitude,
+                longitude,
+            };
 
-        setAlertVariant("success");
-        setAlertMessage(`${newLocation} added to favorites!`);
-        setShowAlert(true);
-        setTimeout(() => setShowAlert(false), 3000);
-    };
-
-    const handleRemoveFavorite = (id) => {
-        const locationToRemove = favorites.find(fav => fav.id === id);
-        setFavorites(favorites.filter(fav => fav.id !== id));
-
-        setAlertVariant("info");
-        setAlertMessage(`${locationToRemove.name} removed from favorites`);
-        setShowAlert(true);
-        setTimeout(() => setShowAlert(false), 3000);
-    };
-
-    const getWeatherIcon = (condition) => {
-        switch(condition.toLowerCase()) {
-            case "sunny":
-                return "☀️";
-            case "cloudy":
-                return "☁️";
-            case "rainy":
-                return "🌧️";
-            case "partly cloudy":
-                return "⛅";
-            default:
-                return "🌤️";
+            setFavorites((prev) => [...prev, newFavorite]);
+            setNewLocation("");
+            setAlertVariant("success");
+            setAlertMessage(`${name} dodano do ulubionych.`);
+        } catch (error) {
+            setAlertVariant("danger");
+            setAlertMessage("Nie udało się dodać miasta. Sprawdź nazwę i spróbuj ponownie.");
+        } finally {
+            setShowAlert(true);
+            setIsAdding(false);
+            setTimeout(() => setShowAlert(false), 3000);
         }
     };
 
+    const handleRemoveFavorite = (id) => {
+        const locationToRemove = favorites.find((fav) => fav.id === id);
+        setFavorites(favorites.filter((fav) => fav.id !== id));
+
+        setAlertVariant("info");
+        setAlertMessage(`${locationToRemove?.name || "Miasto"} usunięto z ulubionych.`);
+        setShowAlert(true);
+        setTimeout(() => setShowAlert(false), 3000);
+    };
+
     return (
-        <Container className="py-5">
-            <h1 className="text-center mb-4">Ulubione miejsca</h1>
-            <div className="golden-line mb-4"></div>
+        <div className="weather-content-wrapper default-weather">
+            <Container className="py-5">
+                <h1 className="text-center mb-2 text-white">Ulubione miejsca</h1>
+                <p className="text-center text-white-50 mb-3">Szybki dostęp do szczegółowej prognozy wybranych miast.</p>
+                <div className="golden-line mb-4"></div>
 
-            {showAlert && (
-                <Alert variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>
-                    {alertMessage}
-                </Alert>
-            )}
+                {showAlert && (
+                    <Alert variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>
+                        {alertMessage}
+                    </Alert>
+                )}
 
-            <Row className="justify-content-center mb-5">
-                <Col md={6}>
-                    <Card>
-                        <Card.Body>
-                            <Card.Title>Wyszukaj miasto</Card.Title>
-                            <Form onSubmit={handleAddFavorite}>
-                                <Form.Group className="mb-3">
+                <Row className="justify-content-center mb-5">
+                    <Col md={8} lg={6}>
+                        <Card className="glass-card p-3 border-0">
+                            <Card.Body>
+                                <Card.Title className="text-white mb-3">Dodaj nowe miasto</Card.Title>
+                                <Form onSubmit={handleAddFavorite} className="d-flex gap-2">
                                     <Form.Control
                                         type="text"
-                                        placeholder="Enter city name"
+                                        className="search-input"
+                                        placeholder="Wpisz nazwę miasta..."
                                         value={newLocation}
                                         onChange={(e) => setNewLocation(e.target.value)}
                                         required
                                     />
-                                </Form.Group>
-                                <Button
-                                    variant="primary"
-                                    type="submit"
-                                    disabled={!newLocation.trim()}
-                                >
-                                    Dodaj do ulubionych
-                                </Button>
-                            </Form>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-
-            <Row>
-                {favorites.length > 0 ? (
-                    favorites.map((location) => (
-                        <Col key={location.id} md={6} lg={4} className="mb-4">
-                            <Card className="favorite-card h-100">
-                                <Card.Body>
-                                    <div className="d-flex justify-content-between align-items-start">
-                                        <Card.Title>{location.name}</Card.Title>
-                                        <Button
-                                            variant="outline-danger"
-                                            size="sm"
-                                            onClick={() => handleRemoveFavorite(location.id)}
-                                        >
-                                            Usuń
-                                        </Button>
-                                    </div>
-                                    <div className="weather-summary my-3">
-                                        <span className="weather-icon">{getWeatherIcon(location.condition)}</span>
-                                        <span className="current-temp">{location.temp}°C</span>
-                                        <span className="current-condition">{location.condition}</span>
-                                    </div>
-                                    <Button
-                                        as={Link}
-                                        to="/forecast"
-                                        variant="outline-primary"
-                                        className="w-100"
-                                    >
-                                        Szczegóły
+                                    <Button className="btn-yellow" type="submit" disabled={isAdding || !newLocation.trim()}>
+                                        {isAdding ? <Spinner size="sm" animation="border" /> : "Dodaj"}
                                     </Button>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    ))
-                ) : (
-                    <Col className="text-center">
-                        <Card className="p-4">
-                            <p>You haven't added any favorite locations yet.</p>
-                            <p>Add locations to quickly access their weather information.</p>
+                                </Form>
+                            </Card.Body>
                         </Card>
                     </Col>
-                )}
-            </Row>
+                </Row>
 
-
-        </Container>
+                <Row>
+                    {favorites.length > 0 ? (
+                        favorites.map((location) => (
+                            <Col key={location.id} md={6} lg={4} className="mb-4">
+                                <Card className="glass-card h-100 p-2 border-0">
+                                    <Card.Body className="d-flex flex-column">
+                                        <div className="d-flex justify-content-between align-items-start mb-2">
+                                            <Card.Title className="text-white mb-0">{location.name}</Card.Title>
+                                            <Button
+                                                variant="outline-light"
+                                                size="sm"
+                                                onClick={() => handleRemoveFavorite(location.id)}
+                                            >
+                                                Usuń
+                                            </Button>
+                                        </div>
+                                        <div className="weather-summary my-3 d-flex align-items-center justify-content-between">
+                                            <span className="fs-2">{getWeatherIcon(location.weathercode)}</span>
+                                            <span className="fs-2 fw-bold text-yellow">{location.temp}°C</span>
+                                            <span className="text-white-50 text-end">{getWeatherDescription(location.weathercode)}</span>
+                                        </div>
+                                        <Button
+                                            as={Link}
+                                            to="/forecast"
+                                            className="btn-yellow mt-auto"
+                                            state={{ latitude: location.latitude, longitude: location.longitude, name: location.name }}
+                                        >
+                                            Szczegóły
+                                        </Button>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        ))
+                    ) : (
+                        <Col className="text-center">
+                            <Card className="glass-card p-4 border-0">
+                                <p className="mb-1">Nie masz jeszcze ulubionych miejsc.</p>
+                                <p className="text-white-50 mb-0">Dodaj miasta, aby szybko przejść do ich prognozy.</p>
+                            </Card>
+                        </Col>
+                    )}
+                </Row>
+            </Container>
+        </div>
     );
 };
 

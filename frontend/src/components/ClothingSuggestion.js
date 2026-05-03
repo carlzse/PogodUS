@@ -109,7 +109,7 @@ const ClothingSuggestion = ({ latitude, longitude }) => {
                                 <Col className="border-start border-white border-opacity-10">
                                     <div className="text-white-50 small">TWOJA SUMA</div>
                                     <div
-                                        className={`h5 mb-0 ${currentTotalClo >= targetClo ? 'text-success' : 'text-yellow'}`}>
+                                        className={`h5 mb-0 ${currentTotalClo >= targetClo ? 'text-info' : 'text-yellow'}`}>
                                         {currentTotalClo.toFixed(2)}
                                     </div>
                                 </Col>

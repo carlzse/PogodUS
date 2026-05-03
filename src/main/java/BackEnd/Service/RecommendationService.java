@@ -13,7 +13,6 @@ public class RecommendationService {
     @Autowired
     private WardrobeRepository wardrobeRepository;
 
-    // Definicje slotów (kategorie ubrań)
     private static final List<String> BASE_TOP = Arrays.asList(
             "T-shirt", "Koszula (długi rękaw)", "Bielizna termo"
     );
@@ -27,10 +26,6 @@ public class RecommendationService {
             "Spodnie (lekkie)", "Jeansy", "Spodnie wełniane", "Spodnie termo"
     );
 
-    /**
-     * Oblicza docelową wartość CLO na podstawie temperatury odczuwalnej,
-     * opadów i prędkości wiatru.
-     */
     public double calculateTargetClo(double tempApparent, boolean isRaining, double windSpeed) {
         double targetClo = (22.0 - tempApparent) / 7.0;
         if (targetClo < 0.2) targetClo = 0.2;
@@ -39,9 +34,6 @@ public class RecommendationService {
         return targetClo;
     }
 
-    /**
-     * Główna metoda rekomendacji – zwraca optymalny zestaw ubrań.
-     */
     public List<WardrobeItem> getPersonalizedRecommendation(Long userId, double tempApparent,
                                                             boolean isRaining, double windSpeed) {
         double targetClo = calculateTargetClo(tempApparent, isRaining, windSpeed);
@@ -55,21 +47,14 @@ public class RecommendationService {
         return findOptimalSet(allItems, targetClo, isRaining, windSpeed > 20.0, tempApparent);
     }
 
-    /**
-     * Przeszukuje wszystkie kombinacje warstw i wybiera tę z sumą CLO najbliższą targetClo,
-     * uwzględniając wymagania wodoodporności, wiatroszczelności oraz
-     * odrzucając ubrania zbyt grube na daną temperaturę.
-     */
     private List<WardrobeItem> findOptimalSet(List<WardrobeItem> allItems, double targetClo,
                                               boolean isRaining, boolean isWindy, double tempApparent) {
-        // Maksymalne dopuszczalne CLO dla pojedynczego elementu w zależności od temperatury
         double maxAllowedClo;
         if (tempApparent > 15) maxAllowedClo = 0.45;
         else if (tempApparent > 10) maxAllowedClo = 0.65;
         else if (tempApparent > 5) maxAllowedClo = 0.85;
         else maxAllowedClo = 1.2;
 
-        // Filtrujemy przedmioty, które są zbyt ciężkie
         List<WardrobeItem> baseOptions = filterByCategories(allItems, BASE_TOP);
         List<WardrobeItem> midOptions = filterByCategories(allItems, MID_LAYER).stream()
                 .filter(i -> i.getEstimatedClo() <= maxAllowedClo)
@@ -86,13 +71,12 @@ public class RecommendationService {
         List<WardrobeItem> bestSet = null;
         double bestDiff = Double.MAX_VALUE;
         int bestLayers = 0;
-        double bestMaxItemClo = Double.MAX_VALUE; // dodatkowe kryterium
+        double bestMaxItemClo = Double.MAX_VALUE;
 
         for (WardrobeItem base : baseOptions) {
             for (WardrobeItem bottom : bottomOptions) {
                 for (WardrobeItem mid : withNull(midOptions)) {
                     for (WardrobeItem outer : withNull(outerOptions)) {
-                        // Walidacja warstwy zewnętrznej względem warunków
                         if (isRaining && outer != null && !outer.isWaterproof()) continue;
                         if (isWindy && outer != null && !outer.isWindproof()) continue;
 
@@ -103,15 +87,10 @@ public class RecommendationService {
                         int layers = 2 + (mid != null ? 1 : 0) + (outer != null ? 1 : 0);
                         double diff = Math.abs(totalClo - targetClo);
 
-                        // Najwyższe CLO w zestawie (im niższe tym lepiej)
                         double maxItemClo = Math.max(base.getEstimatedClo(), bottom.getEstimatedClo());
                         if (mid != null) maxItemClo = Math.max(maxItemClo, mid.getEstimatedClo());
                         if (outer != null) maxItemClo = Math.max(maxItemClo, outer.getEstimatedClo());
 
-                        // Kryteria wyboru (w kolejności ważności):
-                        // 1. jak najmniejsza różnica do targetClo
-                        // 2. jak najmniejsza liczba warstw
-                        // 3. jak najniższe maksymalne CLO pojedynczego elementu
                         boolean better = false;
                         if (diff < bestDiff - 0.01) {
                             better = true;

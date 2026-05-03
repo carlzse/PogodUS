@@ -3,10 +3,16 @@ import { Card, Spinner, Alert, ListGroup, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 
 const ClothingSuggestion = ({ latitude, longitude }) => {
+    const parseComfortOffset = (value) => {
+        const parsed = Number.parseFloat(value);
+        return Number.isFinite(parsed) ? parsed : 0;
+    };
+
     const [recommendation, setRecommendation] = useState([]);
     const [targetClo, setTargetClo] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [comfortOffset, setComfortOffset] = useState(() => parseComfortOffset(localStorage.getItem('comfortOffset')));
 
     useEffect(() => {
         const getWeatherAndSuggest = async () => {
@@ -23,11 +29,12 @@ const ClothingSuggestion = ({ latitude, longitude }) => {
                 );
                 const weatherData = await weatherRes.json();
                 const temp = weatherData.current.apparent_temperature;
+                const adjustedTemp = temp - comfortOffset;
                 const isRaining = weatherData.current.precipitation > 0;
                 const windSpeed = weatherData.current.windspeed_10m;
 
                 const res = await axios.get(`http://localhost:8080/api/wardrobe/recommendation`, {
-                    params: {userId: userData.id, temp: temp, rain: isRaining, windSpeed: windSpeed}
+                    params: {userId: userData.id, temp: adjustedTemp, rain: isRaining, windSpeed: windSpeed}
                 });
 
                 setRecommendation(res.data.items || []);
@@ -42,7 +49,25 @@ const ClothingSuggestion = ({ latitude, longitude }) => {
         };
 
         if (latitude && longitude) getWeatherAndSuggest();
-    }, [latitude, longitude]);
+    }, [latitude, longitude, comfortOffset]);
+
+    useEffect(() => {
+        const handleComfortOffsetChange = (event) => {
+            const eventValue = event?.detail?.value;
+            if (typeof eventValue === 'number') {
+                setComfortOffset(eventValue);
+                return;
+            }
+
+            setComfortOffset(parseComfortOffset(localStorage.getItem('comfortOffset')));
+        };
+
+        window.addEventListener('comfortOffsetChanged', handleComfortOffsetChange);
+
+        return () => {
+            window.removeEventListener('comfortOffsetChanged', handleComfortOffsetChange);
+        };
+    }, []);
 
     const user = JSON.parse(localStorage.getItem('user'));
     if (!user) return <Alert variant="info">Zaloguj się, aby zobaczyć sugestie.</Alert>;
@@ -51,7 +76,6 @@ const ClothingSuggestion = ({ latitude, longitude }) => {
 
     const currentTotalClo = recommendation.reduce((acc, curr) => acc + (curr.estimatedClo || 0), 0);
 
-    // Zmień fragment return w ClothingSuggestion.js:
     return (
         <Card className="glass-card h-100 shadow-none border-0">
             <Card.Body className="p-4">

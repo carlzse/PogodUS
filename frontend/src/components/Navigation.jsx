@@ -19,6 +19,7 @@ const Navigation = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [user, setUser] = useState(null);
+    const [comfortOffset, setComfortOffset] = useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,11 +27,13 @@ const Navigation = () => {
         const savedFontSize = localStorage.getItem('fontSize');
         const savedLanguage = localStorage.getItem('language');
         const savedUser = localStorage.getItem('user');
+        const savedComfortOffset = localStorage.getItem('comfortOffset');
 
         if (savedContrast) setHighContrast(savedContrast === 'true');
         if (savedFontSize) setFontSize(savedFontSize);
         if (savedLanguage) setLanguage(savedLanguage);
         if (savedUser) setUser(JSON.parse(savedUser));
+        if (savedComfortOffset !== null) setComfortOffset(parseFloat(savedComfortOffset));
 
         applyAccessibilitySettings(
             savedContrast === 'true',
@@ -70,6 +73,13 @@ const Navigation = () => {
         setUser(null);
         navigate('/');
     };
+    const handleComfortOffsetChange = (value) => {
+        const parsedValue = parseFloat(value);
+        setComfortOffset(parsedValue);
+        localStorage.setItem('comfortOffset', parsedValue.toString());
+        window.dispatchEvent(new CustomEvent('comfortOffsetChanged', { detail: { value: parsedValue } }));
+    };
+
 
     // --- TŁUMACZENIA (z dodanymi Ulubionymi) ---
     const translations = {
@@ -105,6 +115,20 @@ const Navigation = () => {
                         <Nav className="align-items-center">
                             {user ? (
                                 <NavDropdown title={`Cześć, ${user.name}`} id="user-dropdown" className="me-3">
+                                    <div className="px-3 py-2 text-dark" style={{ minWidth: '260px' }}>
+                                        <div className="fw-semibold mb-2">Dostosuj</div>
+                                        <Form.Range
+                                            min={-5}
+                                            max={5}
+                                            step={0.5}
+                                            value={comfortOffset}
+                                            onChange={(e) => handleComfortOffsetChange(e.target.value)}
+                                        />
+                                        <div className="small text-muted">
+                                            Korekta temperatury odczuwalnej: {comfortOffset > 0 ? '+' : ''}{comfortOffset.toFixed(1)}°C
+                                        </div>
+                                    </div>
+                                    <NavDropdown.Divider />
                                     <NavDropdown.Item onClick={handleLogout} className="text-dark">{t.logout}</NavDropdown.Item>
                                 </NavDropdown>
                             ) : (

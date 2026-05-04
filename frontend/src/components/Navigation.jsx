@@ -49,6 +49,13 @@ const Navigation = () => {
         document.body.classList.add(`font-${size}`);
     };
 
+    // Funkcja zmiany rozmiaru czcionki
+    const handleFontSizeChange = (size) => {
+        setFontSize(size);
+        localStorage.setItem('fontSize', size);
+        applyAccessibilitySettings(highContrast, size, language);
+    };
+
     const handleLogin = (e) => {
         e.preventDefault();
         const users = [
@@ -140,6 +147,19 @@ const Navigation = () => {
                                     localStorage.setItem('highContrast', nc);
                                     applyAccessibilitySettings(nc, fontSize, language);
                                 }}>{t.contrast}: {highContrast ? 'ON' : 'OFF'}</NavDropdown.Item>
+                                <NavDropdown.Divider />
+                                {/* Podmenu wyboru wielkości czcionki */}
+                                <NavDropdown title={t.font} id="font-size-dropdown" drop="end" className="custom-font-dropdown">
+                                    <NavDropdown.Item onClick={() => handleFontSizeChange('small')} className="text-dark">
+                                        {t.small}{fontSize === 'small' ? ' ✓' : ''}
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item onClick={() => handleFontSizeChange('normal')} className="text-dark">
+                                        {t.normal}{fontSize === 'normal' ? ' ✓' : ''}
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item onClick={() => handleFontSizeChange('large')} className="text-dark">
+                                        {t.large}{fontSize === 'large' ? ' ✓' : ''}
+                                    </NavDropdown.Item>
+                                </NavDropdown>
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item className="text-dark" onClick={() => setLanguage(language === 'pl' ? 'en' : 'pl')}>
                                     {t.language}: {language.toUpperCase()}

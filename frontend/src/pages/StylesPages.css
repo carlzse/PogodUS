@@ -400,3 +400,29 @@ body {
     color: yellow !important;
     border: 2px solid yellow;
 }
+/* Domyślny rozmiar (normal) */
+body.font-normal {
+    font-size: 16px;
+}
+
+body.font-small {
+    font-size: 12px;
+}
+
+body.font-large {
+    font-size: 20px;
+}
+/* Przycisk podmenu - czarny tekst, bez podświetlenia */
+.custom-font-dropdown .dropdown-toggle {
+    color: #000 !important;
+    background-color: transparent !important;
+    text-decoration: none !important;
+}
+
+.custom-font-dropdown .dropdown-toggle:hover,
+.custom-font-dropdown .dropdown-toggle:focus,
+.custom-font-dropdown .dropdown-toggle:active {
+    color: #000 !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+}

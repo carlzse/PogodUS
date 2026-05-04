@@ -109,7 +109,7 @@ const Navigation = () => {
                             <Nav.Link as={Link} to="/forecast" className="mx-2">{t.forecast}</Nav.Link>
                             <Nav.Link as={Link} to="/favorites" className="mx-2">{t.favorites}</Nav.Link>
                             <Nav.Link as={Link} to="/wardrobe" className="navbar-link">
-                                <i className="bi bi-door-closed me-1"></i> Szafa
+                                <i className="bi bi-door-closed me-1"></i> {t.wardrobe}
                             </Nav.Link>
                         </Nav>
                         <Nav className="align-items-center">

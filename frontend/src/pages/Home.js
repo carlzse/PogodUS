@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Container, Row, Col, Button, Spinner, Alert } from 'react-bootstrap';
+import { Card, Container, Row, Col, Button, Spinner } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import {
     getUserLocation,
@@ -17,10 +17,44 @@ const Home = () => {
     const [error, setError] = useState(null);
     const [searchLocation, setSearchLocation] = useState('');
     const [coordinates, setCoordinates] = useState(null);
-    // Stan odpowiedzialny za dynamiczne tło
     const [backgroundClass, setBackgroundClass] = useState('');
 
-    // Logika przypisywania klas tła na podstawie weathercode[cite: 10, 11]
+    // 🔹 STANY DOSTĘPNOŚCI (pobierane z localStorage ustawianego w Navigation)
+    const [fontSizeLevel, setFontSizeLevel] = useState(1);
+    const [highContrast, setHighContrast] = useState(false);
+    const [isEnglish, setIsEnglish] = useState(false);
+
+    useEffect(() => {
+        const font = localStorage.getItem('fontSizeLevel');
+        const contrast = localStorage.getItem('highContrast');
+        const lang = localStorage.getItem('isEnglish');
+
+        if (font) setFontSizeLevel(Number(font));
+        if (contrast) setHighContrast(contrast === 'true');
+        if (lang) setIsEnglish(lang === 'true');
+    }, []);
+
+    const translations = {
+        pl: {
+            searchPlaceholder: "Wpisz nazwę miasta...",
+            search: "Szukaj",
+            hourly: "Prognoza godzinowa",
+            details: "Szczegółowa prognoza",
+            clear: "Czyste niebo",
+            cloudy: "Pochmurno"
+        },
+        en: {
+            searchPlaceholder: "Enter city name...",
+            search: "Search",
+            hourly: "Hourly forecast",
+            details: "Detailed forecast",
+            clear: "Clear sky",
+            cloudy: "Cloudy"
+        }
+    };
+
+    const t = isEnglish ? translations.en : translations.pl;
+
     const getBackgroundClass = (weathercode) => {
         if (weathercode === 0) return 'clear-sky';
         if (weathercode === 1) return 'partly-cloudy';
@@ -38,7 +72,6 @@ const Home = () => {
             setCurrentWeather(weatherData);
             setLocationName(name);
             setCoordinates({ latitude, longitude });
-            // Ustawienie tła[cite: 10]
             setBackgroundClass(getBackgroundClass(weatherData.current.weathercode));
             setIsLoading(false);
         } catch (err) {
@@ -84,8 +117,12 @@ const Home = () => {
         .slice(0, 8) || [];
 
     return (
-        /* Główny kontener z dynamiczną klasą tła[cite: 10] */
-        <div className={`weather-content-wrapper ${backgroundClass}`}>
+        <div className={`
+            weather-content-wrapper 
+            ${backgroundClass}
+            font-size-${fontSizeLevel}
+            ${highContrast ? 'high-contrast' : ''}
+        `}>
             <Container className="py-5">
                 <Row className="justify-content-center mb-5">
                     <Col xs={12} lg={8}>
@@ -93,11 +130,13 @@ const Home = () => {
                             <input
                                 type="text"
                                 className="form-control search-input"
-                                placeholder="Wpisz nazwę miasta..."
+                                placeholder={t.searchPlaceholder}
                                 value={searchLocation}
                                 onChange={(e) => setSearchLocation(e.target.value)}
                             />
-                            <Button type="submit" className="btn-yellow ms-2 rounded-pill">Szukaj</Button>
+                            <Button type="submit" className="btn-yellow ms-2 rounded-pill">
+                                {t.search}
+                            </Button>
                             <Button variant="link" onClick={fetchUserLocationAndWeather} className="fs-4 p-0 ms-2">📍</Button>
                         </form>
                     </Col>
@@ -115,27 +154,18 @@ const Home = () => {
                                     <div style={{ fontSize: '4rem' }}>{getWeatherIcon(currentWeather.current?.weathercode)}</div>
                                     <h1 className="display-3 fw-bold">{Math.round(currentWeather.current?.temperature_2m)}°C</h1>
                                     <p className="fs-5 text-white-50">
-                                        {currentWeather.current?.weathercode === 0 ? "Czyste niebo" : "Pochmurno"}
+                                        {currentWeather.current?.weathercode === 0 ? t.clear : t.cloudy}
                                     </p>
-                                    <div className="mt-4 pt-3 border-top border-white border-opacity-10">
-                                        <p className="mb-1 fw-medium">
-                                            Maks: {Math.round(currentWeather.daily?.temperature_2m_max?.[0])}°C |
-                                            Min: {Math.round(currentWeather.daily?.temperature_2m_min?.[0])}°C
-                                        </p>
-                                        <p className="small text-white-50 mb-0">
-                                            Wiatr: {currentWeather.current?.windspeed_10m} km/h
-                                        </p>
-                                    </div>
                                     <Button as={Link} to="/forecast" className="btn-yellow mt-auto"
                                             state={{ latitude: coordinates?.latitude, longitude: coordinates?.longitude, name: locationName }}>
-                                        Szczegółowa prognoza
+                                        {t.details}
                                     </Button>
                                 </Card>
                             </Col>
 
                             <Col lg={6} md={12} className="mb-4">
                                 <Card className="glass-card h-100 p-4 border-0">
-                                    <h4 className="text-center">Prognoza godzinowa</h4>
+                                    <h4 className="text-center">{t.hourly}</h4>
                                     <div className="golden-line"></div>
                                     <div className="hourly-list">
                                         {hourlyForecastData.map((item, idx) => (

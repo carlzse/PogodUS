@@ -15,7 +15,6 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if (wardrobeRepository.count() == 0) {
-            // ==================== WARSTWA PODSTAWOWA (BASE TOP) ====================
             saveItem(1L, "T-shirt", false, false, "Bawełna", 140.0, 0.09);
             saveItem(1L, "T-shirt", false, false, "Poliester sportowy", 120.0, 0.08);
             saveItem(1L, "Koszula (długi rękaw)", false, false, "Bawełna", 180.0, 0.22);
@@ -23,13 +22,11 @@ public class DataLoader implements CommandLineRunner {
             saveItem(1L, "Bielizna termo", false, false, "Wełna merino", 200.0, 0.18);
             saveItem(1L, "Bielizna termo", false, false, "Syntetyk", 150.0, 0.15);
 
-            // ==================== WARSTWA ŚRODKOWA (MID LAYER) ====================
             saveItem(1L, "Bluza / Sweter", false, false, "Bawełna/Poliester", 280.0, 0.30);
             saveItem(1L, "Bluza / Sweter", false, false, "Wełna", 400.0, 0.40);
             saveItem(1L, "Polar", false, false, "Polar 300", 300.0, 0.32);
             saveItem(1L, "Sweter wełniany", false, false, "Wełna merynosów", 450.0, 0.38);
 
-            // ==================== WARSTWA ZEWNĘTRZNA (OUTER) ====================
             saveItem(1L, "Kurtka lekka", true, true, "Gore-Tex", null, 0.42);
             saveItem(1L, "Kurtka lekka", true, true, "Nylon (Wiatrówka)", 100.0, 0.30);
             saveItem(1L, "Kurtka zimowa", true, true, "Puch naturalny", null, 0.85);
@@ -38,7 +35,6 @@ public class DataLoader implements CommandLineRunner {
             saveItem(1L, "Softshell", true, true, "Membrana", 280.0, 0.45);
             saveItem(1L, "Wiatrówka", false, true, "Nylon", 120.0, 0.25);
 
-            // ==================== DÓŁ (BOTTOM) ====================
             saveItem(1L, "Spodnie (lekkie)", false, false, "Chinosy bawełniane", 250.0, 0.20);
             saveItem(1L, "Spodnie (lekkie)", false, false, "Materiał sportowy", 180.0, 0.15);
             saveItem(1L, "Spodnie (lekkie)", true, true, "Softshell", 320.0, 0.25);

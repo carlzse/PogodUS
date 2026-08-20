@@ -31,21 +31,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                // 1. POZWÓL NA RAMKI (Kluczowe dla H2)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
 
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
                 .authorizeHttpRequests(httpRequests -> httpRequests
-                        // 2. JAWNE DOPUSZCZENIE H2
                         .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().permitAll()
                 )
 
-                // 3. ZMIANA NA IF_REQUIRED (H2 potrzebuje sesji)
                 .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
 
                 .authenticationProvider(authenticationProvider)

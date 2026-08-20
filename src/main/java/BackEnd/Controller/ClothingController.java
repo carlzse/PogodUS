@@ -27,9 +27,9 @@ public class ClothingController {
         this.clothingService = clothingService;
     }
 
-    /**
-     * Główny endpoint API pod ścieżką /api/clothing/suggestion
-     */
+
+     //Główny endpoint API
+
     @GetMapping("/suggestion")
     public ResponseEntity<?> getClothingSuggestion(
             @RequestParam(required = false) String latitude,
@@ -37,21 +37,17 @@ public class ClothingController {
 
         logger.info("Otrzymano żądanie sugestii ubioru dla: lat={}, lon={}", latitude, longitude);
 
-        // Dodatkowe logowanie przed parsowaniem
         logger.debug("Raw latitude: {}", latitude);
         logger.debug("Raw longitude: {}", longitude);
 
         logger.info("Otrzymano żądanie sugestii ubioru dla: lat={}, lon={}", latitude, longitude);
 
-        // Sprawdzanie czy parametry zostały podane
         if (latitude == null || longitude == null) {
             logger.warn("Brakujące parametry: latitude={}, longitude={}", latitude, longitude);
             Map<String, String> error = new HashMap<>();
             error.put("error", "Wymagane parametry: latitude i longitude");
             return ResponseEntity.badRequest().body(error);
         }
-
-        // Konwersja string do double z obsługą potencjalnych błędów
         try {
             double lat = Double.parseDouble(latitude.replace(",", "."));
             double lon = Double.parseDouble(longitude.replace(",", "."));
@@ -67,9 +63,6 @@ public class ClothingController {
         }
     }
 
-    /**
-     * Dodatkowy endpoint bezpośrednio pod /suggestion dla testów
-     */
     @GetMapping("/test")
     public ResponseEntity<?> testEndpoint() {
         Map<String, String> response = new HashMap<>();
@@ -78,9 +71,6 @@ public class ClothingController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Metoda pomocnicza przetwarzająca żądanie - używana przez oba endpointy
-     */
     private ResponseEntity<?> processClothingSuggestionRequest(double latitude, double longitude) {
         try {
             // Sprawdzenie poprawności parametrów
@@ -90,15 +80,13 @@ public class ClothingController {
                 error.put("error", "Nieprawidłowe współrzędne geograficzne");
                 return ResponseEntity.badRequest().body(error);
             }
-
-            // Pobierz dane pogodowe
             Map<String, Object> weatherData = clothingService.getWeatherData(latitude, longitude);
 
             if (weatherData == null) {
                 throw new RuntimeException("Nie otrzymano danych pogodowych");
             }
 
-            // Wygeneruj sugestie ubioru
+            // Generowanie sugestii
             ClothingService.ClothingSuggestion suggestion = clothingService.getSuggestion(weatherData);
 
             if (suggestion == null) {

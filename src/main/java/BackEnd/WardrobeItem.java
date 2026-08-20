@@ -20,7 +20,6 @@ public class WardrobeItem {
     private Double grammage;
     private Double estimatedClo;
 
-    // Gettery i Settery (jeśli nie używasz Lomboka)
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Long getUserId() { return userId; }

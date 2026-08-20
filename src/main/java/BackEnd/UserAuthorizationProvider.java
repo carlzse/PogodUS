@@ -12,8 +12,6 @@ public class UserAuthorizationProvider implements AuthenticationProvider {
             return null;
         }
         authentication = (UsernamePasswordAuthenticationToken) authentication;
-//        authentication.getPrincipal(); email
-//        authentication.getCredentials();  haslo
         return authentication;
 
     }

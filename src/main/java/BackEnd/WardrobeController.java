@@ -34,7 +34,7 @@ public class WardrobeController {
             @RequestParam Long userId,
             @RequestParam double temp,
             @RequestParam boolean rain,
-            @RequestParam double windSpeed) {   // nowy parametr
+            @RequestParam double windSpeed) {
 
         List<WardrobeItem> items = recommendationService.getPersonalizedRecommendation(userId, temp, rain, windSpeed);
         double targetClo = recommendationService.calculateTargetClo(temp, rain, windSpeed);
